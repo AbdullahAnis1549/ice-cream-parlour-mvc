@@ -1,0 +1,189 @@
+@model IEnumerable<WebApplication12.Models.Book>
+@{
+    ViewData["Title"] = "Recipe Book Shop";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5 animate-slide-up" style="border-bottom: 2px solid var(--luxury-gold); padding-bottom: 30px;">
+        <div>
+            <h1 class="display-4 fw-bold text-uppercase" style="font-family: 'Playfair Display', serif; color: var(--luxury-black); letter-spacing: 2px;">The Archive</h1>
+            <p class="text-muted text-uppercase small" style="letter-spacing: 3px;">Literature of the Artisanal Arts</p>
+        </div>
+        <div class="shop-badge d-none d-md-block">
+            <i class="fa-solid fa-feather-pointed fs-2"></i>
+        </div>
+    </div>
+
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success border-0 shadow-sm rounded-pill px-4 mb-5">
+            <i class="fa-solid fa-circle-check me-2"></i> @TempData["SuccessMessage"]
+        </div>
+    }
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-danger border-0 shadow-sm rounded-pill px-4 mb-5">
+            <i class="fa-solid fa-circle-xmark me-2"></i> @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="row g-5">
+        @foreach (var book in Model)
+        {
+            <div class="col-lg-6">
+                <div class="book-card animate-pop-in">
+                    <div class="row g-0">
+                        <div class="col-md-5">
+                            <div class="book-cover-wrapper">
+                                @if (!string.IsNullOrEmpty(book.ImageUrl))
+                                {
+                                    <img src="@book.ImageUrl" alt="@book.Title" class="book-cover">
+                                }
+                                else
+                                {
+                                    <div class="book-placeholder"><i class="fa-solid fa-book fs-huge"></i></div>
+                                }
+                                <div class="price-bubble" style="background: var(--luxury-black); border: 1px solid var(--luxury-gold); color: var(--luxury-gold);">BY ORDER: $@book.Price</div>
+                            </div>
+                        </div>
+                        <div class="col-md-7">
+                            <div class="card-body p-5 d-flex flex-column h-100">
+                                <h3 class="book-title fw-bold text-uppercase" style="font-family: 'Playfair Display', serif; letter-spacing: 1px;">@book.Title</h3>
+                                <p class="book-desc flex-grow-1 mb-4" style="line-height: 1.8;">@book.Description</p>
+                                <div class="mt-auto">
+                                    <a asp-action="Order" asp-route-bookId="@book.Id" class="btn-luxury-buy">
+                                        Acquire Copy
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+
+    .parlor-title {
+        font-family: 'Fredoka', sans-serif;
+        color: var(--primary-blue);
+        font-weight: 600;
+    }
+
+    .shop-badge {
+        background: var(--luxury-black);
+        color: var(--luxury-gold);
+        width: 80px;
+        height: 80px;
+        border-radius: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--luxury-gold);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+    }
+
+    .book-card {
+        background: white;
+        border-radius: 0;
+        overflow: hidden;
+        transition: 0.4s;
+        border: 1px solid #eee;
+        height: 320px;
+    }
+
+    .book-card .row {
+        height: 100%;
+    }
+
+    .book-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 45px rgba(0, 0, 0, 0.1);
+        border-color: var(--luxury-gold);
+    }
+
+    .book-cover-wrapper {
+        position: relative;
+        height: 100%;
+        min-height: 100%;
+    }
+
+    .book-cover {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .book-placeholder {
+        width: 100%;
+        height: 100%;
+        background: #f7f7f7;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #ddd;
+    }
+
+    .price-bubble {
+        position: absolute;
+        bottom: 15px;
+        left: 15px;
+        background: var(--mehran-gold);
+        color: var(--primary-blue);
+        padding: 5px 15px;
+        border-radius: 50px;
+        font-weight: 700;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .book-title {
+        font-family: 'Fredoka', sans-serif;
+        color: #4a4a4a;
+        margin-bottom: 15px;
+    }
+
+    .book-desc {
+        color: #777;
+        font-size: 14px;
+        line-height: 1.6;
+    }
+
+    .btn-luxury-buy {
+        background: var(--luxury-black);
+        color: var(--luxury-gold);
+        text-decoration: none;
+        display: block;
+        text-align: center;
+        padding: 15px;
+        border-radius: 0;
+        font-weight: 600;
+        transition: 0.4s;
+        border: 1px solid var(--luxury-gold);
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-size: 12px;
+    }
+
+    .btn-luxury-buy:hover {
+        background: var(--luxury-gold);
+        color: var(--luxury-black);
+    }
+
+    @@keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-slide-up { animation: fadeInUp 0.8s ease-out; }
+
+    @@keyframes popIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .animate-pop-in { animation: popIn 0.6s ease-out; }
+</style>

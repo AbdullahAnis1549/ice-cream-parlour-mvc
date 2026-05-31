@@ -1,0 +1,57 @@
+@model IEnumerable<WebApplication12.Models.UserSubmission>
+@{
+    ViewData["Title"] = "Contest Submissions";
+}
+
+<div class="container py-5">
+    <h2 class="mb-4"><i class="fa-solid fa-trophy text-warning me-2"></i> Recipe Contest Entries</h2>
+
+    <div class="row g-4">
+        @foreach (var sub in Model)
+        {
+            <div class="col-md-6">
+                <div class="card border-0 shadow-sm rounded-4 h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between mb-3">
+                            <h5 class="fw-bold mb-0">@sub.RecipeName</h5>
+                            <span class="badge @(sub.Status == "Selected" ? "bg-success" : "bg-warning text-dark")">@sub.Status</span>
+                        </div>
+                        <p class="small text-muted mb-3">Submitted by: <strong class="text-dark">@sub.User?.Name</strong></p>
+                        
+                        <div class="mb-3">
+                            <strong>Ingredients:</strong>
+                            <p class="small text-truncate">@sub.Ingredients</p>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            @if (sub.Status != "Selected")
+                            {
+                                <form asp-action="SelectWinner" method="post" class="d-flex gap-2 w-100">
+                                    <input type="hidden" name="id" value="@sub.Id" />
+                                    <input type="number" name="prize" class="form-control form-control-sm" placeholder="Prize $ (e.g. 50)" required />
+                                    <button type="submit" class="btn btn-sm btn-success px-4">Award Prize & Select</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <div class="w-100">
+                                    <div class="bg-light p-2 rounded-3 text-center text-success fw-bold mb-2">
+                                        <i class="fa-solid fa-check-circle me-1"></i> Winner Selected ($@sub.PrizeMoney Awarded)
+                                    </div>
+                                    <form asp-action="UpdateSubmissionImage" method="post" enctype="multipart/form-data" class="d-flex gap-2 w-100 align-items-center">
+                                        <input type="hidden" name="id" value="@sub.Id" />
+                                        @if(!string.IsNullOrEmpty(sub.ImageUrl)){
+                                            <img src="@sub.ImageUrl" style="height:30px;width:30px;object-fit:cover;border-radius:5px;" />
+                                        }
+                                        <input type="file" name="imageFile" class="form-control form-control-sm" accept="image/*" required />
+                                        <button type="submit" class="btn btn-sm btn-primary">Update Image</button>
+                                    </form>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

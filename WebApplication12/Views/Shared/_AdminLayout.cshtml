@@ -1,0 +1,605 @@
+@using Microsoft.AspNetCore.Http
+@using WebApplication12.Data
+@inject ApplicationDbContext dbContext
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap & Icons -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        :root {
+            --primary-chocolate: #4B2E2B;
+            --secondary-caramel: #D9A066;
+            --accent-vanilla: #FFF3E0;
+            --luxury-black: #2D1A18;
+            --pure-white: #FFFFFF;
+            --off-white: #faf3e0;
+            --text-dark: #2D1A18;
+            --text-gray: #6d5b59;
+            --sidebar-bg: #fff;
+            --main-bg: #f8f9fa;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--main-bg);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Sidebar Styles */
+        .admin-sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            border-right: 1px solid #eee;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .admin-sidebar::-webkit-scrollbar { display: none; }
+        .admin-sidebar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        .sidebar-logo {
+            padding: 20px;
+            text-align: center;
+            border-bottom: 1px solid #eee;
+        }
+
+        .sidebar-logo a {
+            font-family: 'Playfair Display', serif;
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-chocolate);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-logo span {
+            font-size: 24px;
+            color: var(--secondary-caramel);
+        }
+        
+        .sidebar-logo small {
+            display: block;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 10px;
+            color: var(--text-gray);
+            letter-spacing: 2px;
+            margin-top: -5px;
+        }
+
+        .sidebar-menu {
+            padding: 20px 0;
+            flex-grow: 1;
+        }
+
+        .menu-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 25px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            gap: 15px;
+        }
+        
+        .menu-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 16px;
+        }
+
+        .menu-item:hover, .menu-item.active {
+            background-color: var(--accent-vanilla);
+            color: var(--primary-chocolate);
+            border-left: 4px solid var(--secondary-caramel);
+            padding-left: 21px;
+        }
+        
+        .menu-item.active {
+            background-color: var(--secondary-caramel);
+            color: var(--pure-white);
+            border-left: none;
+            padding-left: 25px;
+            margin: 0 15px;
+            border-radius: 8px;
+        }
+
+        .badge-count {
+            background-color: var(--accent-vanilla);
+            color: var(--primary-chocolate);
+            font-size: 11px;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 10px;
+            margin-left: auto;
+        }
+
+        .promo-box {
+            background-color: var(--accent-vanilla);
+            margin: 20px;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            position: relative;
+            border: 1px dashed var(--secondary-caramel);
+        }
+        
+        .promo-box img {
+            width: 60px;
+            margin-top: -40px;
+            margin-bottom: 10px;
+            background: white;
+            border-radius: 50%;
+            padding: 5px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        .promo-box h6 {
+            color: var(--primary-chocolate);
+            font-weight: 700;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .promo-box p {
+            color: var(--text-gray);
+            font-size: 11px;
+            margin-bottom: 0;
+        }
+
+        .sidebar-footer {
+            padding: 20px;
+            border-top: 1px solid #eee;
+        }
+
+        .logout-btn {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: var(--text-gray);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.3s;
+            background: none;
+            border: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .logout-btn:hover {
+            color: var(--primary-chocolate);
+        }
+
+        /* Main Content Styles */
+        .admin-main {
+            flex-grow: 1;
+            margin-left: 260px;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            width: calc(100% - 260px);
+        }
+
+        .admin-header {
+            background-color: var(--pure-white);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #eee;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .header-title h4 {
+            margin: 0;
+            font-weight: 700;
+            color: var(--primary-chocolate);
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        .header-title p {
+            margin: 0;
+            font-size: 12px;
+            color: var(--text-gray);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .date-picker-btn {
+            background-color: var(--pure-white);
+            border: 1px solid #eee;
+            padding: 8px 15px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--text-dark);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+
+        .notification-btn {
+            position: relative;
+            background: none;
+            border: none;
+            color: var(--text-gray);
+            font-size: 20px;
+            padding: 0;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background-color: var(--secondary-caramel);
+            color: var(--pure-white);
+            font-size: 10px;
+            width: 16px;
+            height: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: bold;
+        }
+
+        .admin-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .admin-profile img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--secondary-caramel);
+        }
+
+        .admin-profile-info h6 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .admin-profile-info p {
+            margin: 0;
+            font-size: 11px;
+            color: var(--text-gray);
+        }
+
+        .admin-content {
+            padding: 30px;
+            flex-grow: 1;
+        }
+        
+        .admin-footer {
+            text-align: center;
+            padding: 20px;
+            color: var(--text-gray);
+            font-size: 12px;
+            margin-top: auto;
+        }
+        
+        /* Card Styles */
+        .admin-card {
+            background-color: var(--pure-white);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.02);
+            border: 1px solid #f5f5f5;
+            height: 100%;
+        }
+        
+        .admin-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .admin-card-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary-chocolate);
+            margin: 0;
+        }
+
+        /* Stat Cards */
+        .stat-value {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--primary-chocolate);
+            margin: 5px 0;
+        }
+        
+        .stat-trend {
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .stat-trend.positive { color: #2ecc71; }
+        .stat-trend.negative { color: #e74c3c; }
+        
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .bg-pink-light { background-color: rgba(255, 192, 203, 0.2); color: #ff6b81; }
+        .bg-green-light { background-color: rgba(46, 204, 113, 0.2); color: #2ecc71; }
+        .bg-purple-light { background-color: rgba(155, 89, 182, 0.2); color: #9b59b6; }
+        .bg-orange-light { background-color: rgba(243, 156, 18, 0.2); color: #f39c12; }
+        .bg-blue-light { background-color: rgba(52, 152, 219, 0.2); color: #3498db; }
+        .bg-caramel-light { background-color: rgba(217, 160, 102, 0.2); color: var(--secondary-caramel); }
+        .bg-chocolate-light { background-color: rgba(75, 46, 43, 0.1); color: var(--primary-chocolate); }
+    </style>
+</head>
+<body>
+    <aside class="admin-sidebar">
+        <div class="sidebar-logo">
+            <a href="/Admin/Dashboard">
+                <span>✧</span> CREAMY DELIGHT
+            </a>
+            <small>ICE CREAM PARLOR</small>
+        </div>
+
+        <nav class="sidebar-menu">
+            @{
+                var currentAction = ViewContext.RouteData.Values["action"]?.ToString();
+            }
+            <a href="/Admin/Dashboard" class="menu-item @(currentAction == "Dashboard" ? "active" : "")">
+                <i class="fa-solid fa-house"></i> Dashboard
+            </a>
+            <a href="/Admin/Orders" class="menu-item @(currentAction == "Orders" ? "active" : "")">
+                <i class="fa-solid fa-bag-shopping"></i> Orders
+                @if(ViewBag.OrderCount != null) { <span class="badge-count">@ViewBag.OrderCount</span> }
+            </a>
+            <a href="/Admin/Users" class="menu-item @(currentAction == "Users" ? "active" : "")">
+                <i class="fa-solid fa-users"></i> Customers
+            </a>
+            <a href="/Admin/Recipes" class="menu-item @(currentAction == "Recipes" ? "active" : "")">
+                <i class="fa-solid fa-ice-cream"></i> Menu / Flavors
+            </a>
+            <a href="/Admin/Books" class="menu-item @(currentAction == "Books" ? "active" : "")">
+                <i class="fa-solid fa-book"></i> Recipe Books
+            </a>
+            <a href="/Admin/Deals" class="menu-item @(currentAction == "Deals" ? "active" : "")">
+                <i class="fa-solid fa-tags"></i> Coupons & Offers
+            </a>
+            <a href="/Admin/HeroSliders" class="menu-item @(currentAction == "HeroSliders" ? "active" : "")">
+                <i class="fa-solid fa-images"></i> Gallery / Sliders
+            </a>
+            <a href="/Admin/Feedback" class="menu-item @(currentAction == "Feedback" ? "active" : "")">
+                <i class="fa-solid fa-star"></i> Reviews
+            </a>
+            <a href="/Admin/Submissions" class="menu-item @(currentAction == "Submissions" ? "active" : "")">
+                <i class="fa-solid fa-trophy"></i> Contests
+            </a>
+            
+            <div class="promo-box mt-5">
+                <img src="https://cdn-icons-png.flaticon.com/512/938/938063.png" alt="Ice Cream" />
+                <h6>Creamy Delights!</h6>
+                <p>Luxurious tastes.</p>
+            </div>
+        </nav>
+
+        <div class="sidebar-footer">
+            <form asp-controller="Account" asp-action="Logout" method="post">
+                @Html.AntiForgeryToken()
+                <button type="submit" class="logout-btn">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i> Logout
+                </button>
+            </form>
+        </div>
+    </aside>
+
+    <main class="admin-main">
+        <header class="admin-header">
+            <div class="header-title">
+                <button class="btn btn-link d-md-none text-dark" id="sidebarToggle"><i class="fa-solid fa-bars"></i></button>
+                <div>
+                    <h4>@ViewData["Title"]</h4>
+                    <p>Welcome back, Admin! 🍦</p>
+                </div>
+            </div>
+            
+            <div class="header-actions">
+                <button id="daterange-btn" class="date-picker-btn d-none d-md-flex border-0 bg-light px-3 py-2" style="cursor:pointer;">
+                    <i class="fa-regular fa-calendar text-muted"></i>
+                    <span id="daterange-text" class="mx-2 fw-medium">@DateTime.Now.ToString("MMM dd") - @DateTime.Now.AddDays(7).ToString("MMM dd, yyyy")</span>
+                    <i class="fa-solid fa-chevron-down text-muted" style="font-size: 10px;"></i>
+                </button>
+                
+                @{
+                    var pendingOrders = dbContext.BookOrders.Count(o => o.Status == "Ordered");
+                    var pendingSubmissions = dbContext.UserSubmissions.Count(s => s.Status == "Pending");
+                    var totalNotifications = pendingOrders + pendingSubmissions;
+                }
+
+                <div class="dropdown mx-2">
+                    <button class="notification-btn" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fa-regular fa-bell"></i>
+                        @if(totalNotifications > 0)
+                        {
+                            <span class="notification-badge">@totalNotifications</span>
+                        }
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3 p-0" style="width: 300px; overflow: hidden;">
+                        <li class="p-3 border-bottom bg-light">
+                            <h6 class="mb-0 fw-bold">Notifications</h6>
+                        </li>
+                        @if (pendingOrders > 0)
+                        {
+                            <li>
+                                <a class="dropdown-item py-3 border-bottom" href="/Admin/Orders">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-warning-subtle text-warning rounded-circle p-2 me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fa-solid fa-box"></i>
+                                        </div>
+                                        <div>
+                                            <p class="mb-0 fw-bold fs-6">New Orders</p>
+                                            <small class="text-muted">@pendingOrders new orders to process.</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        }
+                        @if (pendingSubmissions > 0)
+                        {
+                            <li>
+                                <a class="dropdown-item py-3 border-bottom" href="/Admin/Submissions">
+                                    <div class="d-flex align-items-center">
+                                        <div class="bg-info-subtle text-info rounded-circle p-2 me-3" style="width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
+                                            <i class="fa-solid fa-trophy"></i>
+                                        </div>
+                                        <div>
+                                            <p class="mb-0 fw-bold fs-6">Pending Submissions</p>
+                                            <small class="text-muted">@pendingSubmissions recipe submissions await review.</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                        }
+                        @if (totalNotifications == 0)
+                        {
+                            <li class="p-4 text-center text-muted">
+                                <i class="fa-regular fa-bell-slash fs-4 mb-2"></i>
+                                <p class="mb-0">No new notifications</p>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                
+                <div class="dropdown">
+                    <div class="admin-profile" data-bs-toggle="dropdown">
+                        @{
+                            var imageUrl = Context.Session.GetString("UserImageUrl");
+                            if (string.IsNullOrEmpty(imageUrl)) imageUrl = "https://cdn-icons-png.flaticon.com/512/3135/3135715.png";
+                        }
+                        <img src="@imageUrl" alt="Admin" />
+                        <div class="admin-profile-info d-none d-md-block">
+                            <h6>Admin</h6>
+                            <p>Super Admin <i class="fa-solid fa-chevron-down ms-1"></i></p>
+                        </div>
+                    </div>
+                    <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2 rounded-3">
+                        <li><a class="dropdown-item py-2" href="#"><i class="fa-solid fa-user me-2"></i> Profile</a></li>
+                        <li><a class="dropdown-item py-2" href="#"><i class="fa-solid fa-gear me-2"></i> Settings</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form asp-controller="Account" asp-action="Logout" method="post">
+                                @Html.AntiForgeryToken()
+                                <button type="submit" class="dropdown-item py-2 text-danger"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</button>
+                            </form>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </header>
+
+        <div class="admin-content">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show mb-4 border-0 shadow-sm rounded-3" role="alert">
+                    <i class="fa-solid fa-check-circle me-2"></i> @TempData["SuccessMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show mb-4 border-0 shadow-sm rounded-3" role="alert">
+                    <i class="fa-solid fa-triangle-exclamation me-2"></i> @TempData["ErrorMessage"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+            }
+            @RenderBody()
+        </div>
+        
+        <footer class="admin-footer">
+            &copy; 2026 Creamy Delight Ice Cream Parlor. All rights reserved. 🍦
+        </footer>
+    </main>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    
+    <script>
+        $(document).ready(function() {
+            $('#sidebarToggle').click(function() {
+                $('.admin-sidebar').toggleClass('d-none');
+            });
+            
+            setTimeout(function() {
+                $('.alert').fadeOut('fast');
+            }, 5000);
+
+            // Initialize Flatpickr for the calendar button
+            flatpickr("#daterange-btn", {
+                mode: "range",
+                dateFormat: "Y-m-d",
+                defaultDate: [new Date(), new Date().fp_incr(7)],
+                onChange: function(selectedDates, dateStr, instance) {
+                    if (selectedDates.length === 2) {
+                        var start = flatpickr.formatDate(selectedDates[0], "MMM dd");
+                        var end = flatpickr.formatDate(selectedDates[1], "MMM dd, Y");
+                        $('#daterange-text').text(start + " - " + end);
+                        
+                        // Optionally trigger a reload or ajax call to update dashboard data
+                    }
+                }
+            });
+        });
+    </script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

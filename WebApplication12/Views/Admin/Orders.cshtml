@@ -1,0 +1,57 @@
+@model IEnumerable<WebApplication12.Models.BookOrder>
+@{
+    ViewData["Title"] = "Manage Orders";
+}
+
+<div class="container py-5">
+    <h2 class="mb-4"><i class="fa-solid fa-truck-fast text-blue me-2"></i> Book Sales & Orders</h2>
+
+    <div class="bg-white rounded-4 shadow-sm overflow-hidden">
+        <table class="table table-hover mb-0">
+            <thead class="bg-light">
+                <tr>
+                    <th class="ps-4">Date</th>
+                    <th>Customer</th>
+                    <th>Book</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th class="pe-4 text-end">Update Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var order in Model)
+                {
+                    <tr>
+                        <td class="ps-4 small">@order.OrderDate.ToShortDateString()</td>
+                        <td>
+                            <div class="fw-bold">@order.CustomerName</div>
+                            <div class="small text-muted">@order.Phone</div>
+                        </td>
+                        <td>@order.Book?.Title</td>
+                        <td>$@order.TotalCost</td>
+                        <td>
+                            <span class="badge @(order.Status == "Completed" ? "bg-success" : "bg-primary")">
+                                @order.Status
+                            </span>
+                        </td>
+                        <td class="pe-4 text-end">
+                            <form asp-action="UpdateOrderStatus" method="post" class="d-flex justify-content-end gap-1">
+                                <input type="hidden" name="id" value="@order.Id" />
+                                <select name="status" class="form-select form-select-sm" style="width: 120px;">
+                                    <option value="Ordered" selected=@(order.Status=="Ordered")>Ordered</option>
+                                    <option value="Processed" selected=@(order.Status=="Processed")>Processed</option>
+                                    <option value="Completed" selected=@(order.Status=="Completed")>Completed</option>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-dark">Ok</button>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<style>
+    .text-blue { color: #a3daff; }
+</style>

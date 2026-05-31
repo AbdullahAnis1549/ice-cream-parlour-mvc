@@ -1,0 +1,346 @@
+@using Microsoft.AspNetCore.Http
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Sweet Scoops Parlor</title>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Bootstrap & Icons -->
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        :root {
+            --primary-chocolate: #4B2E2B;
+            --secondary-caramel: #D9A066;
+            --accent-vanilla: #FFF3E0;
+            --luxury-black: #2D1A18; /* A darker shade of chocolate */
+            --luxury-gold: #D9A066;  /* Caramel color */
+            --pure-white: #FFF3E0;   /* Vanilla Cream as base */
+            --off-white: #faf3e0;
+            --text-dark: #2D1A18;
+            --text-gray: #6d5b59;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--pure-white);
+            color: var(--primary-chocolate);
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        /* Luxury Navigation */
+        .navbar {
+            background: var(--primary-chocolate);
+            border-bottom: 3px solid var(--secondary-caramel);
+            padding: 8px 0;
+            transition: none;
+        }
+
+        .navbar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 30px;
+            font-weight: 700;
+            color: var(--accent-vanilla) !important;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .navbar-brand i { color: black; }
+
+        .nav-link {
+            font-weight: 600;
+            color: var(--accent-vanilla) !important;
+            margin: 0 12px;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .nav-link:hover {
+            color: var(--secondary-caramel) !important;
+        }
+
+        /* Auth Buttons */
+        .btn-auth {
+            padding: 8px 24px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-login {
+            color: var(--luxury-gold);
+            border: 1px solid var(--luxury-gold);
+            margin-right: 15px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-login:hover {
+            background: var(--secondary-caramel);
+            color: var(--primary-chocolate);
+        }
+
+        .btn-register {
+            background: var(--secondary-caramel);
+            color: var(--primary-chocolate);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .btn-register:hover {
+            background: var(--vanilla-cream);
+            color: var(--primary-chocolate);
+        }
+
+        .user-profile-nav {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 5px 15px;
+            border-radius: 50px;
+            cursor: pointer;
+            border: 1px solid var(--secondary-caramel);
+        }
+
+        .user-avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid white;
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--primary-chocolate);
+            padding: 80px 0 30px;
+            border-top: 5px solid var(--secondary-caramel);
+            margin-top: 50px;
+            color: var(--accent-vanilla);
+        }
+
+        .footer-logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--secondary-caramel);
+            margin-bottom: 25px;
+            display: block;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .footer-links h5 {
+            font-weight: 700;
+            margin-bottom: 25px;
+            color: var(--luxury-gold);
+            text-transform: uppercase;
+            font-size: 14px;
+            letter-spacing: 2px;
+        }
+
+        .footer-links ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 10px;
+        }
+
+        .footer-links a {
+            color: var(--text-gray);
+            text-decoration: none;
+            transition: 0.3s;
+            font-size: 13px;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-links a:hover {
+            color: var(--luxury-gold);
+            transform: translateX(5px);
+            display: inline-block;
+        }
+
+        .social-icons a {
+            font-size: 20px;
+            margin-right: 15px;
+            color: #ccc;
+            transition: 0.3s;
+        }
+
+        .social-icons a:hover {
+            color: var(--primary-pink);
+        }
+
+        .copyright {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+        }
+
+        main {
+            min-height: 70vh;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg sticky-top">
+            <div class="container">
+                <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                    <span style="font-size: 24px; color: var(--luxury-gold);">✧</span> CREAMY DELIGHT
+                </a>
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav mx-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Recipes</a>
+                            <ul class="dropdown-menu border-0 shadow-sm">
+                                <li><a class="dropdown-item" asp-controller="Recipes" asp-action="Index">Full Menu</a></li>
+                                <li><a class="dropdown-item" asp-controller="Recipes" asp-action="Index" asp-route-type="free">Free Recipes</a></li>
+                                <li><a class="dropdown-item" asp-controller="Recipes" asp-action="Submit">Add Your Recipe</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Books" asp-action="Index">Order Books</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="About">About Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact Us</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="FAQ">FAQ</a>
+                        </li>
+                    </ul>
+                    <div class="d-flex align-items-center">
+                        @if (Context.Session.GetString("UserRole") == "admin")
+                        {
+                            <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-dark rounded-pill px-3 me-3 small"><i class="fa-solid fa-screwdriver-wrench me-1"></i> Admin</a>
+                        }
+                        @if (Context.Session.GetString("UserId") == null)
+                        {
+                            <a asp-controller="Account" asp-action="Login" class="btn-auth btn-login">Login</a>
+                            <a asp-controller="Account" asp-action="Register" class="btn-auth btn-register">Join Now</a>
+                        }
+                        else
+                        {
+                            <div class="dropdown">
+                                <div class="user-profile-nav" id="userMenu" data-bs-toggle="dropdown">
+                                    @{
+                                        var imageUrl = Context.Session.GetString("UserImageUrl");
+                                        var userName = Context.Session.GetString("UserName");
+                                    }
+                                    @if (!string.IsNullOrEmpty(imageUrl))
+                                    {
+                                        <img src="@imageUrl" class="user-avatar" alt="User">
+                                    }
+                                    else
+                                    {
+                                        <i class="fa-solid fa-circle-user text-white fs-4"></i>
+                                    }
+                                    <span class="fw-bold text-white">@userName</span>
+                                    <i class="fa-solid fa-chevron-down fs-xs text-muted"></i>
+                                </div>
+                                <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg p-2" style="border-radius: 15px;">
+                                    <li><a class="dropdown-item p-2 rounded" asp-controller="Account" asp-action="Profile"><i class="fa-solid fa-user-gear me-2 text-primary"></i> My Profile</a></li>
+                                    <li><hr class="dropdown-divider"></li>
+                                    <li>
+                                        <form asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                                            @Html.AntiForgeryToken()
+                                            <button type="submit" class="dropdown-item p-2 rounded text-danger"><i class="fa-solid fa-right-from-bracket me-2"></i> Logout</button>
+                                        </form>
+                                    </li>
+                                </ul>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4">
+                    <a class="footer-logo" href="#">✧ CREAMY DELIGHT</a>
+                    <p class="text-muted">Defining the art of cold indulgence since 2026. Join the elite collection of artisanal flavors.</p>
+                    <div class="social-icons">
+                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
+                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
+                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
+                        <a href="#"><i class="fa-brands fa-tiktok"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 footer-links">
+                    <h5>Quick Links</h5>
+                    <ul>
+                        <li><a href="#">About Us</a></li>
+                        <li><a href="#">Our Menu</a></li>
+                        <li><a href="#">Specialities</a></li>
+                        <li><a href="#">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 footer-links">
+                    <h5>Account</h5>
+                    <ul>
+                        <li><a asp-controller="Account" asp-action="Login">Login</a></li>
+                        <li><a asp-controller="Account" asp-action="Register">Register</a></li>
+                        <li><a href="#">Gift Cards</a></li>
+                        <li><a href="#">Help Center</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-4 mb-4 footer-links text-lg-end">
+                    <h5>Newsletter</h5>
+                    <p class="text-muted">Get a free scoop on your birthday!</p>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control rounded-pill-start border-0 bg-light" placeholder="Email Address">
+                        <button class="btn btn-primary rounded-pill-end px-4" type="button">Go!</button>
+                    </div>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2026 Sweet Scoops Ice Cream Parlor - All Rights Reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

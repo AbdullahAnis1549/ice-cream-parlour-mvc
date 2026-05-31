@@ -1,0 +1,99 @@
+@model WebApplication12.Models.HeroSlider
+@{
+    ViewData["Title"] = "Edit Hero Slide";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="admin-title">Refine Slide Details</h2>
+                <a asp-action="HeroSliders" class="btn btn-outline-secondary btn-sm">
+                    <i class="fa-solid fa-arrow-left me-2"></i> Back to List
+                </a>
+            </div>
+
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-5">
+                    <form asp-action="EditHeroSlider" method="post" enctype="multipart/form-data">
+                        <input type="hidden" asp-for="Id" />
+                        <input type="hidden" asp-for="ImageUrl" />
+
+                        <div class="mb-4">
+                            <label asp-for="Title" class="form-label text-uppercase small fw-bold" style="color: var(--luxury-gold)">Slide Title (HTML allowed)</label>
+                            <input asp-for="Title" class="form-control admin-input" placeholder="e.g. CREAMY &lt;br/&gt; &lt;span style='color: var(--secondary-caramel);'&gt;DELIGHT&lt;/span&gt;" />
+                            <small class="text-muted">You can use HTML tags to style specific parts of the title.</small>
+                            <span asp-validation-for="Title" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-4">
+                            <label asp-for="Subtitle" class="form-label text-uppercase small fw-bold" style="color: var(--luxury-gold)">Subtitle</label>
+                            <input asp-for="Subtitle" class="form-control admin-input" placeholder="e.g. Crafting Excellence. One Scoop at a Time." />
+                            <span asp-validation-for="Subtitle" class="text-danger"></span>
+                        </div>
+
+                        <div class="row mb-5">
+                            <div class="col-md-6">
+                                <label asp-for="DisplayOrder" class="form-label text-uppercase small fw-bold" style="color: var(--luxury-gold)">Display Order</label>
+                                <input asp-for="DisplayOrder" class="form-control admin-input" type="number" />
+                                <small class="text-muted">Lower numbers appear first.</small>
+                                <span asp-validation-for="DisplayOrder" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.ImageUrl))
+                        {
+                            <div class="mb-4 p-3 bg-light rounded text-center border">
+                                <p class="small text-uppercase fw-bold mb-2">Current Image</p>
+                                <img src="@Model.ImageUrl" class="img-fluid rounded shadow-sm" style="max-height: 200px;" />
+                            </div>
+                        }
+
+                        <div class="mb-5">
+                            <label class="form-label text-uppercase small fw-bold" style="color: var(--luxury-gold)">Update Background Image</label>
+                            <div class="file-upload-wrapper p-4 text-center border rounded">
+                                <i class="fa-solid fa-image fs-1 mb-3 text-muted"></i>
+                                <input type="file" name="ImageFile" class="form-control" accept="image/*" />
+                                <p class="small text-muted mt-2 mb-0">Upload a new image to replace the current one. Leave empty to keep existing.</p>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-luxury w-100 py-3 text-uppercase fw-bold letter-spacing-1">
+                            <i class="fa-solid fa-check me-2"></i> Save Changes
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    :root {
+        --luxury-gold: #D9A066;
+        --luxury-black: #4B2E2B;
+    }
+
+    .admin-title { font-family: 'Playfair Display', serif; font-weight: 700; color: var(--luxury-black); text-transform: uppercase; letter-spacing: 2px; }
+    
+    .admin-input {
+        border-radius: 0;
+        border: 1px solid #ddd;
+        padding: 12px 15px;
+    }
+    .admin-input:focus {
+        border-color: var(--luxury-gold);
+        box-shadow: none;
+    }
+
+    .btn-luxury {
+        background: var(--luxury-black);
+        color: var(--luxury-gold);
+        border: 1px solid var(--luxury-gold);
+        transition: 0.3s;
+    }
+    .btn-luxury:hover {
+        background: var(--luxury-gold);
+        color: var(--luxury-black);
+    }
+</style>

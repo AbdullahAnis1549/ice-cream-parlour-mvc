@@ -1,0 +1,117 @@
+@model WebApplication12.Models.Recipe
+@{
+    ViewData["Title"] = "Add New Collection Item";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8 animate-slide-up">
+            <div class="card border-0 shadow-sm" style="border-top: 5px solid var(--luxury-gold) !important;">
+                <div class="card-header bg-dark text-white p-4">
+                    <h3 class="mb-0 fw-bold text-uppercase" style="font-family: 'Playfair Display', serif; letter-spacing: 2px;">
+                        <span style="color: var(--luxury-gold);">+</span> New Flavor Entry
+                    </h3>
+                </div>
+                <div class="card-body p-4 p-md-5">
+                    <form asp-action="CreateRecipe" method="post" enctype="multipart/form-data">
+                        <div class="row g-4">
+                            <div class="col-md-9">
+                                <label asp-for="Name" class="form-label text-uppercase small fw-bold">Flavor Name</label>
+                                <input asp-for="Name" class="form-control" placeholder="e.g. Pistachio Pearl" required />
+                            </div>
+                            <div class="col-md-3 d-flex align-items-end">
+                                <div class="form-check form-switch mb-2">
+                                    <input asp-for="IsFree" class="form-check-input" type="checkbox" id="isFreeSwitch">
+                                    <label class="form-check-label small fw-bold text-uppercase" for="isFreeSwitch">Gold Entry</label>
+                                </div>
+                            </div>
+                            
+                            <div class="col-12">
+                                <label asp-for="Description" class="form-label text-uppercase small fw-bold">Artisanal Description</label>
+                                <textarea asp-for="Description" class="form-control" rows="2" placeholder="Describe the sensory experience..."></textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="ImageFile" class="form-label text-uppercase small fw-bold">Imagery Archive (Upload File)</label>
+                                <input asp-for="ImageFile" class="form-control" type="file" accept="image/*" />
+                                <div class="form-text small">High-resolution studio photography recommended.</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Ingredients" class="form-label text-uppercase small fw-bold">Material Components</label>
+                                <textarea asp-for="Ingredients" class="form-control" rows="3" placeholder="List every extraction element..." required></textarea>
+                            </div>
+
+                            <div class="col-12">
+                                <label asp-for="Procedure" class="form-label text-uppercase small fw-bold">The Craft Process</label>
+                                <textarea asp-for="Procedure" class="form-control" rows="4" placeholder="Step-by-step methodology..." required></textarea>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 d-flex gap-3">
+                            <button type="submit" class="btn-luxury-submit">Register Entry</button>
+                            <a asp-action="Recipes" class="btn-luxury-cancel">Discard</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .form-control {
+        border-radius: 0;
+        border: 1px solid #ddd;
+        padding: 12px;
+    }
+    .form-control:focus {
+        border-color: var(--luxury-gold);
+        box-shadow: none;
+    }
+    .form-check-input:checked {
+        background-color: var(--luxury-gold);
+        border-color: var(--luxury-gold);
+    }
+    
+    .btn-luxury-submit {
+        background: var(--luxury-black);
+        color: var(--luxury-gold);
+        border: 1px solid var(--luxury-gold);
+        padding: 15px 40px;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 2px;
+        font-size: 11px;
+        transition: 0.4s;
+    }
+    .btn-luxury-submit:hover {
+        background: var(--luxury-gold);
+        color: var(--luxury-black);
+    }
+
+    .btn-luxury-cancel {
+        background: white;
+        color: #888;
+        border: 1px solid #eee;
+        padding: 15px 40px;
+        text-transform: uppercase;
+        font-weight: 700;
+        letter-spacing: 2px;
+        font-size: 11px;
+        text-decoration: none;
+        transition: 0.3s;
+    }
+    .btn-luxury-cancel:hover {
+        background: #f5f5f5;
+        color: #333;
+    }
+
+    .animate-slide-up {
+        animation: fadeInUp 0.6s ease-out;
+    }
+    @@keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>

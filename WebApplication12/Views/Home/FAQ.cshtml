@@ -1,0 +1,111 @@
+@{
+    ViewData["Title"] = "Common Questions";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="parlor-title display-4">Common Questions</h1>
+        <p class="text-muted">Everything you need to know about your favorite parlor.</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="accordion accordion-flush custom-accordion border" id="faqAccordion">
+                
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                            How do I get access to secret recipes?
+                        </button>
+                    </h2>
+                    <div id="faq1" class="accordion-collapse collapse show" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            To view the full details (ingredients and procedure) of our exclusive recipes, you need to register and select a Monthly or Yearly membership plan.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                            Can I buy recipe books without an account?
+                        </button>
+                    </h2>
+                    <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Yes! Both registered and unregistered (guest) users can purchase our recipe books. Guests just need to provide their delivery address and payment details at checkout.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                            How can I win the recipe prize money?
+                        </button>
+                    </h2>
+                    <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Simply submit your original ice cream recipe through the "Submit Recipe" page. If our Admin selects your recipe as the best flavor of the month, you'll receive prize money and a participation certificate!
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion-item">
+                    <h2 class="accordion-header">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                            Is the payment gateway secure?
+                        </button>
+                    </h2>
+                    <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                        <div class="accordion-body text-muted">
+                            Absolutely. We use industry-standard encryption to handle all transactions for memberships and book orders.
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="mt-5 text-center p-4 bg-dark text-white">
+                <p class="mb-0">Still have questions? <a asp-action="Contact" class="text-gold fw-bold">Contact our support team</a></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+
+    .parlor-title { font-family: 'Playfair Display', serif; color: var(--luxury-black); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; }
+    .text-gold { color: var(--luxury-gold); }
+
+    .custom-accordion .accordion-item {
+        border-bottom: 1px solid #f0f0f0;
+    }
+
+    .custom-accordion .accordion-button {
+        font-weight: 600;
+        color: #4a4a4a;
+        padding: 25px;
+        background: white;
+    }
+
+    .custom-accordion .accordion-button:not(.collapsed) {
+        color: var(--luxury-gold);
+        background: var(--luxury-black);
+        box-shadow: none;
+    }
+
+    .custom-accordion .accordion-button:not(.collapsed)::after {
+        filter: brightness(0) invert(1);
+    }
+
+    .custom-accordion .accordion-button:focus {
+        box-shadow: none;
+    }
+
+    .accordion-body {
+        padding: 25px;
+        line-height: 1.8;
+    }
+</style>

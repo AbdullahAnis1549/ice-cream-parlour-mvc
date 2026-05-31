@@ -1,0 +1,292 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="row g-4 mb-4">
+    <div class="col-md-2 col-sm-6">
+        <div class="admin-card text-center d-flex flex-column align-items-center justify-content-center bg-pink-light">
+            <h6 class="text-muted mb-1 w-100 text-start">Total Orders</h6>
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <h3 class="fw-bold mb-0 text-dark">@ViewBag.OrderCount</h3>
+                <div class="stat-icon bg-white text-danger shadow-sm"><i class="fa-solid fa-bag-shopping"></i></div>
+            </div>
+            <div class="text-start w-100 mt-2 stat-trend positive"><i class="fa-solid fa-arrow-up"></i> 18.6% vs last week</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="admin-card text-center d-flex flex-column align-items-center justify-content-center bg-green-light">
+            <h6 class="text-muted mb-1 w-100 text-start">Total Revenue</h6>
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <h3 class="fw-bold mb-0 text-dark">$ @(ViewBag.TotalRevenue?.ToString("N2") ?? "0.00")</h3>
+                <div class="stat-icon bg-white text-success shadow-sm"><i class="fa-solid fa-dollar-sign"></i></div>
+            </div>
+            <div class="text-start w-100 mt-2 stat-trend positive"><i class="fa-solid fa-arrow-up"></i> 22.4% vs last week</div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="admin-card text-center d-flex flex-column align-items-center justify-content-center bg-purple-light">
+            <h6 class="text-muted mb-1 w-100 text-start">Customers</h6>
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <h3 class="fw-bold mb-0 text-dark">@ViewBag.UserCount</h3>
+                <div class="stat-icon bg-white text-purple shadow-sm"><i class="fa-solid fa-users"></i></div>
+            </div>
+            <div class="text-start w-100 mt-2 stat-trend positive"><i class="fa-solid fa-arrow-up"></i> 15.3% vs last week</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-6">
+        <div class="admin-card text-center d-flex flex-column align-items-center justify-content-center bg-orange-light">
+            <h6 class="text-muted mb-1 w-100 text-start">Avg. Order Value</h6>
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <h3 class="fw-bold mb-0 text-dark">$ @(ViewBag.AvgOrderValue?.ToString("N2") ?? "0.00")</h3>
+                <div class="stat-icon bg-white text-warning shadow-sm"><i class="fa-solid fa-chart-simple"></i></div>
+            </div>
+            <div class="text-start w-100 mt-2 stat-trend positive"><i class="fa-solid fa-arrow-up"></i> 8.7% vs last week</div>
+        </div>
+    </div>
+    <div class="col-md-2 col-sm-6">
+        <div class="admin-card text-center d-flex flex-column align-items-center justify-content-center bg-blue-light">
+            <h6 class="text-muted mb-1 w-100 text-start">Feedback</h6>
+            <div class="d-flex align-items-center justify-content-between w-100">
+                <h3 class="fw-bold mb-0 text-dark">@ViewBag.FeedbackCount</h3>
+                <div class="stat-icon bg-white text-primary shadow-sm"><i class="fa-solid fa-star"></i></div>
+            </div>
+            <div class="text-start w-100 mt-2 stat-trend positive"><i class="fa-solid fa-arrow-up"></i> Great!</div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="admin-card-title">Sales Overview</h5>
+                <select class="form-select form-select-sm w-auto"><option>This Week</option></select>
+            </div>
+            <div style="height: 250px;">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="admin-card-title">Top Flavors</h5>
+            </div>
+            <div style="height: 200px; display: flex; justify-content: center; align-items: center;">
+                <canvas id="flavorsChart"></canvas>
+            </div>
+            <div class="mt-4 small">
+                <div class="d-flex justify-content-between mb-2"><span class="text-muted"><i class="fa-solid fa-circle text-danger me-2" style="font-size: 8px;"></i> Belgian Chocolate</span> <span class="fw-bold">28%</span></div>
+                <div class="d-flex justify-content-between mb-2"><span class="text-muted"><i class="fa-solid fa-circle text-pink me-2" style="font-size: 8px;"></i> Strawberry Delight</span> <span class="fw-bold">20%</span></div>
+                <div class="d-flex justify-content-between mb-2"><span class="text-muted"><i class="fa-solid fa-circle text-warning me-2" style="font-size: 8px;"></i> Vanilla Bean</span> <span class="fw-bold">16%</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3">
+        <div class="admin-card">
+            <div class="admin-card-header">
+                <h5 class="admin-card-title">Recent Orders</h5>
+                <a href="#" class="text-decoration-none small" style="color: var(--secondary-caramel);">View All</a>
+            </div>
+            <div class="recent-orders-list">
+                @if (ViewBag.RecentOrders != null)
+                {
+                    foreach (var order in ViewBag.RecentOrders)
+                    {
+                        var badgeClass = order.Status == "Completed" ? "bg-success-subtle text-success" : (order.Status == "Cancelled" ? "bg-danger-subtle text-danger" : "bg-warning-subtle text-warning");
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://cdn-icons-png.flaticon.com/512/938/938063.png" class="rounded-circle bg-light p-1 me-3" width="40" height="40" />
+                            <div class="flex-grow-1">
+                                <h6 class="mb-0 fw-bold fs-6">#ORD@(order.Id)</h6>
+                                <small class="text-muted" style="font-size: 10px;">@order.OrderDate.ToString("MMM dd, yyyy • h:mm tt")</small>
+                            </div>
+                            <div class="text-end">
+                                <span class="badge @badgeClass rounded-pill px-2 py-1 mb-1" style="font-size: 10px;">@order.Status</span>
+                                <div class="fw-bold" style="font-size: 12px;">$ @order.TotalCost.ToString("N2")</div>
+                            </div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="admin-card">
+            <h5 class="admin-card-title mb-4">Order Status Overview</h5>
+            <div class="row align-items-center">
+                <div class="col-md-6" style="height: 200px; display: flex; justify-content: center; align-items: center;">
+                    <canvas id="orderStatusChart"></canvas>
+                </div>
+                <div class="col-md-6 mt-4 mt-md-0 small">
+                    <div class="d-flex justify-content-between mb-3"><span class="text-muted"><i class="fa-solid fa-square text-success me-2"></i> Completed</span> <span class="fw-bold">@ViewBag.CompletedCount</span></div>
+                    <div class="d-flex justify-content-between mb-3"><span class="text-muted"><i class="fa-solid fa-square text-warning me-2"></i> Ordered</span> <span class="fw-bold">@ViewBag.OrderedCount</span></div>
+                    <div class="d-flex justify-content-between mb-3"><span class="text-muted"><i class="fa-solid fa-square text-primary me-2"></i> Processed</span> <span class="fw-bold">@ViewBag.ProcessedCount</span></div>
+                    <div class="d-flex justify-content-between mb-3"><span class="text-muted"><i class="fa-solid fa-square text-purple me-2" style="color: #9b59b6;"></i> Cancelled</span> <span class="fw-bold">@ViewBag.CancelledCount</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="admin-card">
+            <h5 class="admin-card-title mb-4">Top Customers</h5>
+            <div class="table-responsive">
+                <table class="table table-borderless table-hover align-middle mb-0 small">
+                    <thead class="text-muted border-bottom">
+                        <tr>
+                            <th class="fw-normal">Customer</th>
+                            <th class="fw-normal">Orders</th>
+                            <th class="fw-normal">Total Spent</th>
+                            <th class="fw-normal">Last Order</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @if (ViewBag.TopCustomers != null)
+                        {
+                            foreach (var cust in ViewBag.TopCustomers)
+                            {
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="rounded-circle me-2" width="30" height="30" />
+                                            <span class="fw-bold">@cust.CustomerName</span>
+                                        </div>
+                                    </td>
+                                    <td>@cust.Orders</td>
+                                    <td>$ @cust.TotalSpent.ToString("N2")</td>
+                                    <td>@cust.LastOrder.ToString("MMM dd, yyyy")</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-3">
+        <div class="admin-card bg-pink-light d-flex align-items-center justify-content-between">
+            <div>
+                <h6 class="text-muted mb-1 text-start">Total Flavors</h6>
+                <h3 class="fw-bold mb-0 text-dark">@ViewBag.RecipeCount</h3>
+                <small class="text-muted">Manage all ice cream flavors</small>
+            </div>
+            <div class="stat-icon bg-white text-danger shadow-sm"><i class="fa-solid fa-ice-cream"></i></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card bg-green-light d-flex align-items-center justify-content-between">
+            <div>
+                <h6 class="text-muted mb-1 text-start">Total Categories</h6>
+                <h3 class="fw-bold mb-0 text-dark">8</h3>
+                <small class="text-muted">Manage product categories</small>
+            </div>
+            <div class="stat-icon bg-white text-success shadow-sm"><i class="fa-solid fa-shapes"></i></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card bg-purple-light d-flex align-items-center justify-content-between">
+            <div>
+                <h6 class="text-muted mb-1 text-start">Active Deals</h6>
+                <h3 class="fw-bold mb-0 text-dark">@ViewBag.DealCount</h3>
+                <small class="text-muted">Manage promo offers</small>
+            </div>
+            <div class="stat-icon bg-white text-purple shadow-sm"><i class="fa-solid fa-tags"></i></div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="admin-card bg-orange-light d-flex align-items-center justify-content-between">
+            <div>
+                <h6 class="text-muted mb-1 text-start">Active Coupons</h6>
+                <h3 class="fw-bold mb-0 text-dark">6</h3>
+                <small class="text-muted">View active offers</small>
+            </div>
+            <div class="stat-icon bg-white text-warning shadow-sm"><i class="fa-solid fa-percent"></i></div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            // Line Chart
+            var ctxSales = document.getElementById('salesChart').getContext('2d');
+            var gradient = ctxSales.createLinearGradient(0, 0, 0, 400);
+            gradient.addColorStop(0, 'rgba(255, 99, 132, 0.5)');
+            gradient.addColorStop(1, 'rgba(255, 99, 132, 0)');
+            
+            new Chart(ctxSales, {
+                type: 'line',
+                data: {
+                    labels: ['May 19', 'May 20', 'May 21', 'May 22', 'May 23', 'May 24', 'May 25'],
+                    datasets: [{
+                        label: 'Sales',
+                        data: [20000, 30000, 22000, 34000, 14000, 15000, 32000],
+                        borderColor: '#ff6b81',
+                        backgroundColor: gradient,
+                        borderWidth: 2,
+                        tension: 0.4,
+                        fill: true,
+                        pointBackgroundColor: '#fff',
+                        pointBorderColor: '#ff6b81',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: {
+                        y: { beginAtZero: true, grid: { borderDash: [5, 5], color: '#f0f0f0' }, ticks: { callback: function(value) { return value/1000 + 'k'; } } },
+                        x: { grid: { display: false } }
+                    }
+                }
+            });
+
+            // Doughnut Chart 1
+            var ctxFlavors = document.getElementById('flavorsChart').getContext('2d');
+            new Chart(ctxFlavors, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Belgian Chocolate', 'Strawberry Delight', 'Vanilla Bean', 'Others'],
+                    datasets: [{
+                        data: [28, 20, 16, 36],
+                        backgroundColor: ['#ff6b81', '#f39c12', '#3498db', '#2ecc71'],
+                        borderWidth: 0,
+                        cutout: '75%'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+
+            // Doughnut Chart 2
+            var ctxOrderStatus = document.getElementById('orderStatusChart').getContext('2d');
+            new Chart(ctxOrderStatus, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'Ordered', 'Processed', 'Cancelled'],
+                    datasets: [{
+                        data: [@ViewBag.CompletedCount, @ViewBag.OrderedCount, @ViewBag.ProcessedCount, @ViewBag.CancelledCount],
+                        backgroundColor: ['#2ecc71', '#f39c12', '#3498db', '#9b59b6'],
+                        borderWidth: 0,
+                        cutout: '75%'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,75 @@
+@model IEnumerable<WebApplication12.Models.Feedback>
+@{
+    ViewData["Title"] = "Customer Feedback";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-5 border-bottom border-dark pb-3">
+        <h2 class="text-uppercase fw-bold" style="font-family: 'Playfair Display', serif; letter-spacing: 2px;">Customer Voicemails</h2>
+        <a asp-action="Dashboard" class="btn-luxury-back">Return to Command</a>
+    </div>
+
+    <div class="row g-4">
+        @foreach (var feedback in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card border-0 shadow-sm rounded-4 h-100 feedback-card">
+                    <div class="card-body p-4">
+                        <div class="d-flex align-items-center mb-3">
+                            <div class="avatar-circle me-3">@feedback.Name.Substring(0, 1).ToUpper()</div>
+                            <div>
+                                <h6 class="mb-0 fw-bold">@feedback.Name</h6>
+                                <small class="text-muted">@feedback.Date.ToString("MMM dd, yyyy")</small>
+                            </div>
+                        </div>
+                        <p class="card-text text-muted italic">"@feedback.Message"</p>
+                        <hr class="opacity-10">
+                        <div class="small fw-bold" style="color: var(--luxury-gold);"><i class="fa-solid fa-envelope me-1"></i> @feedback.Email</div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    .feedback-card { 
+        background: white; 
+        border-radius: 0; 
+        border: 1px solid #eee; 
+        transition: 0.4s; 
+        border-top: 3px solid var(--luxury-gold);
+    }
+    .feedback-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-color: var(--luxury-gold); }
+    
+    .avatar-circle {
+        width: 45px;
+        height: 45px;
+        background: var(--luxury-black);
+        color: var(--luxury-gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 1.2rem;
+        border: 1px solid var(--luxury-gold);
+    }
+
+    .btn-luxury-back {
+        text-decoration: none;
+        color: var(--luxury-black);
+        border: 1px solid var(--luxury-black);
+        padding: 8px 20px;
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 1px;
+        transition: 0.3s;
+    }
+    .btn-luxury-back:hover {
+        background: var(--luxury-black);
+        color: var(--luxury-gold);
+    }
+    
+    .text-gold { color: var(--luxury-gold); }
+    .italic { font-style: italic; }
+</style>

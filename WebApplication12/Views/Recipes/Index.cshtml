@@ -1,0 +1,245 @@
+@model IEnumerable<WebApplication12.Models.Recipe>
+@{
+    ViewData["Title"] = "Ice Cream Flavors";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-0 animate-slide-up" style="background: var(--luxury-black); padding: 80px 0; border-bottom: 3px solid var(--luxury-gold);">
+        <h1 class="display-3 fw-bold text-uppercase mb-2" style="font-family: 'Playfair Display', serif; color: var(--luxury-gold); letter-spacing: 5px;">The Collection</h1>
+        <p class="lead text-white-50 text-uppercase" style="letter-spacing: 3px; font-size: 14px;">Curated Flavors for the Discerning Palate</p>
+    </div>
+
+    <!-- Category Filter Bar -->
+    <div class="category-bar mb-5 shadow-sm bg-white border-bottom">
+        <div class="container d-flex justify-content-center flex-wrap">
+            <a href="#" class="cat-item active">All Collections</a>
+            <a href="#" class="cat-item">Artisanal Sorbet</a>
+            <a href="#" class="cat-item">Premium Italiano</a>
+            <a href="#" class="cat-item">Gourmet Lattes</a>
+            <a href="#" class="cat-item">Signature Plates</a>
+        </div>
+    </div>
+
+    @if (TempData["ErrorMessage"] != null)
+    {
+        <div class="alert alert-warning border-0 shadow-sm rounded-pill px-4 animate-shake">
+            <i class="fa-solid fa-lock me-2"></i> @TempData["ErrorMessage"]
+        </div>
+    }
+
+    <div class="row g-4">
+        @foreach (var item in Model)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="recipe-card">
+                    <div class="card-img-wrapper">
+                        @if (!string.IsNullOrEmpty(item.ImageUrl))
+                        {
+                            <img src="@item.ImageUrl" alt="@item.Name" class="recipe-img">
+                        }
+                        else
+                        {
+                            <div class="placeholder-img"><i class="fa-solid fa-ice-cream fs-1"></i></div>
+                        }
+                        @if (item.IsFree)
+                        {
+                            <span class="badge-free">Free Recipe</span>
+                        }
+                    </div>
+                    <div class="card-body p-4 text-center">
+                        <h5 class="recipe-name fw-bold text-uppercase" style="font-family: 'Playfair Display', serif; letter-spacing: 1px;">@item.Name</h5>
+                        <p class="recipe-desc text-muted mb-4" style="font-size: 13px;">@item.Description</p>
+                        <div class="d-flex justify-content-center align-items-center">
+                            <a asp-action="Details" asp-route-id="@item.Id" class="btn-luxury-action">
+                                Discover Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+        
+        <!-- Add Recipe Call to Action -->
+        <div class="col-md-4 col-lg-3">
+            <div class="recipe-card add-card h-100 d-flex flex-column justify-content-center align-items-center p-4">
+                <div class="add-icon-circle mb-3">
+                    <i class="fa-solid fa-plus text-white fs-3"></i>
+                </div>
+                <h5>Got a new Flavor?</h5>
+                <p class="small text-center text-muted">Share your recipe and win prizes!</p>
+                <a asp-action="Submit" class="btn-outline-scoop">Submit Recipe</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .category-bar {
+        background: white;
+        padding: 20px 0;
+    }
+
+    .cat-item {
+        color: var(--text-gray);
+        text-decoration: none;
+        font-weight: 400;
+        text-transform: uppercase;
+        font-size: 11px;
+        margin: 0 20px;
+        letter-spacing: 2px;
+        transition: 0.3s;
+        position: relative;
+    }
+
+    .cat-item:hover, .cat-item.active {
+        color: var(--luxury-gold);
+    }
+
+    .cat-item:after {
+        content: '';
+        position: absolute;
+        width: 0;
+        height: 1px;
+        bottom: -5px;
+        left: 0;
+        background: var(--luxury-gold);
+        transition: 0.3s;
+    }
+
+    .cat-item.active:after { width: 100%; }
+
+    .parlor-title {
+        font-family: 'Fredoka', sans-serif;
+        color: var(--primary-blue);
+        font-weight: 600;
+    }
+
+    .recipe-card {
+        background: white;
+        border-radius: 0;
+        overflow: hidden;
+        transition: 0.4s;
+        border: 1px solid #eee;
+    }
+
+    .recipe-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        border-color: var(--luxury-gold);
+    }
+
+    .card-img-wrapper {
+        position: relative;
+        height: 220px; 
+        overflow: hidden;
+    }
+
+    .recipe-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; 
+    }
+
+    .placeholder-img {
+        width: 100%;
+        height: 100%;
+        background: var(--luxury-black);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--luxury-gold);
+    }
+
+    .badge-free {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        background: var(--luxury-gold);
+        color: var(--luxury-black);
+        padding: 6px 15px;
+        font-size: 10px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-weight: 700;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+
+    .recipe-name {
+        font-family: 'Fredoka', sans-serif;
+        color: #4a4a4a;
+        margin-bottom: 5px;
+    }
+
+    .recipe-desc {
+        font-size: 13px;
+        color: #888;
+    }
+
+    .btn-luxury-action {
+        border: 1px solid var(--luxury-gold);
+        color: var(--luxury-gold);
+        text-decoration: none;
+        padding: 10px 25px;
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 1px;
+        transition: 0.4s;
+        display: inline-block;
+    }
+
+    .btn-luxury-action:hover {
+        background: var(--luxury-gold);
+        color: var(--luxury-black);
+    }
+
+    .add-card {
+        background: var(--soft-gold);
+        border: 2px dashed var(--mehran-gold);
+    }
+
+    .add-icon-circle {
+        width: 60px;
+        height: 60px;
+        background: var(--luxury-gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-outline-scoop {
+        color: var(--luxury-gold);
+        border: 1px solid var(--luxury-gold);
+        text-decoration: none;
+        padding: 10px 30px;
+        text-transform: uppercase;
+        font-size: 11px;
+        letter-spacing: 1px;
+        margin-top: 15px;
+        transition: 0.4s;
+    }
+
+    .btn-outline-scoop:hover {
+        background: var(--luxury-gold);
+        color: var(--luxury-black);
+    }
+
+    .animate-slide-up {
+        animation: fadeInUp 0.8s ease-out;
+    }
+
+    @@keyframes fadeInUp {
+        from { opacity: 0; transform: translateY(30px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .animate-shake {
+        animation: shake 0.5s ease-in-out;
+    }
+
+    @@keyframes shake {
+        0%, 100% { transform: translateX(0); }
+        25% { transform: translateX(-5px); }
+        75% { transform: translateX(5px); }
+    }
+</style>

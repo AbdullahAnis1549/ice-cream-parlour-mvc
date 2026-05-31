@@ -1,0 +1,91 @@
+@{
+    ViewData["Title"] = "Our Sweet Story";
+}
+
+<div class="about-hero py-5 text-center">
+    <div class="container py-lg-5">
+        <h1 class="display-2 parlor-title mb-4">A Legacy of <span class="text-white">Sweetness</span></h1>
+        <p class="lead mx-auto" style="max-width: 700px; color: #fff;">Founded by Master Churner Mr. "Abdullah Anis" and Mr. "Abdul Rab", CREAMY DELIGHT was born from a single copper pot and a commitment to absolute purity.</p>
+    </div>
+</div>
+
+<div class="container py-5 mt-n5">
+    <div class="row g-4 justify-content-center">
+        <div class="col-md-4">
+            <div class="info-car-box p-4 text-center">
+                <div class="icon-blob mx-auto mb-3"><i class="fa-solid fa-heart fs-2"></i></div>
+                <h4 class="text-uppercase small fw-bold" style="letter-spacing: 2px;">Crafted with Love</h4>
+                <p class="small text-muted">Every pint is churned by hand using the finest natural ingredients we can find.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-car-box p-4 text-center">
+                <div class="icon-blob mx-auto mb-3"><i class="fa-solid fa-star fs-2"></i></div>
+                <h4 class="text-uppercase small fw-bold" style="letter-spacing: 2px;">Award Winning</h4>
+                <p class="small text-muted">Famous for our unique flavors and uncompromising quality across all branches.</p>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="info-car-box p-4 text-center">
+                <div class="icon-blob mx-auto mb-3"><i class="fa-solid fa-earth-americas fs-2"></i></div>
+                <h4 class="text-uppercase small fw-bold" style="letter-spacing: 2px;">Community First</h4>
+                <p class="small text-muted">We empower our customers to share their recipes and join our global sweet family.</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="row align-items-center py-5 mt-5">
+        <div class="col-lg-6 mb-4">
+            <img src="https://images.unsplash.com/photo-1551024601-bec78aea704b?auto=format&fit=crop&q=80&w=1000" class="img-fluid rounded-4 shadow-lg" alt="The Parlor">
+        </div>
+        <div class="col-lg-6 ps-lg-5">
+            <h2 class="auth-header-title mb-4">Meet Mr. "Abdullah Anis" and Mr. "Abdul Rab" </h2>
+            <p class="text-muted">Mr. "Abdullah Anis" and Mr. "Abdul Rab" are the visionary behind CREAMY DELIGHT. With over 20 years of experience in freezing physics and dairy science, he believes that ice cream is the ultimate canvas for artisanal expression.</p>
+            <p class="text-muted">Today, his parlors are a benchmark for excellence, but the mission remains unchanged: <strong>"Purity in every churn."</strong> He has also authored several archival books to share his passion for cold arts with enthusiasts worldwide.</p>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+
+    .about-hero {
+        background: linear-gradient(rgba(45, 26, 24, 0.9), rgba(75, 46, 43, 0.9)), url('https://images.unsplash.com/photo-1501443762994-82bd5dace89a?auto=format&fit=crop&q=80&w=2000');
+        background-size: cover;
+        background-position: center;
+        border-bottom: 5px solid var(--luxury-gold);
+        min-height: 400px;
+    }
+
+    .parlor-title {
+        font-family: 'Playfair Display', serif;
+        font-weight: 700;
+        color: var(--luxury-gold);
+        letter-spacing: 5px;
+    }
+
+    .info-car-box {
+        background: white;
+        border-radius: 0;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        transition: 0.3s;
+        border: 1px solid #eee;
+    }
+
+    .info-car-box:hover {
+        border-color: var(--luxury-gold);
+    }
+
+    .icon-blob {
+        width: 70px;
+        height: 70px;
+        background: var(--luxury-black);
+        color: var(--luxury-gold);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--luxury-gold);
+    }
+
+    .auth-header-title { font-family: 'Playfair Display', serif; font-size: 32px; color: var(--luxury-black); text-transform: uppercase; letter-spacing: 2px; }
+</style>

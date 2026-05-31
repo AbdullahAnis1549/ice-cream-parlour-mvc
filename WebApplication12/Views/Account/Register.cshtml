@@ -1,0 +1,312 @@
+@model WebApplication12.Models.ApplicationUser
+@{
+    ViewData["Title"] = "Join the Parlor";
+}
+
+<div class="auth-container">
+    <div class="auth-card animate-pop-in">
+        <div class="auth-header">
+            <div class="ice-cream-icon">🍦</div>
+            <h1>Create Account</h1>
+            <p>Join our sweet community today!</p>
+        </div>
+
+        <form asp-action="Register" method="post" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="error-summary"></div>
+
+            <div class="input-group">
+                <label asp-for="Name"></label>
+                <input asp-for="Name" placeholder="Enter your full name" />
+                <span asp-validation-for="Name" class="error-msg"></span>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label asp-for="Email"></label>
+                    <input asp-for="Email" placeholder="example@gmail.com" />
+                    <span asp-validation-for="Email" class="error-msg"></span>
+                </div>
+                <div class="input-group">
+                    <label asp-for="Phone"></label>
+                    <input asp-for="Phone" placeholder="+92 XXX XXXXXXX" />
+                    <span asp-validation-for="Phone" class="error-msg"></span>
+                </div>
+            </div>
+
+            <div class="input-row">
+                <div class="input-group">
+                    <label asp-for="Password"></label>
+                    <input asp-for="Password" type="password" placeholder="Min. 6 chars" />
+                    <span asp-validation-for="Password" class="error-msg"></span>
+                </div>
+                <div class="input-group">
+                    <label asp-for="ConfirmedPassword"></label>
+                    <input asp-for="ConfirmedPassword" type="password" placeholder="Repeat password" />
+                    <span asp-validation-for="ConfirmedPassword" class="error-msg"></span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Profile Picture (Optional)</label>
+                <div class="file-upload">
+                    <input type="file" name="imageFile" id="imageFile" accept="image/*" />
+                    <label for="imageFile" class="file-label">
+                        <span class="upload-icon">📸</span>
+                        <span>Click to choose an image</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label>Membership Plan</label>
+                <select asp-for="SubscriptionType" id="subscriptionType" class="form-select" style="border-radius: 12px; padding: 12px;">
+                    <option value="Guest">Guest (Free - Limited Access)</option>
+                    <option value="Monthly">Monthly Member ($15/mo)</option>
+                    <option value="Yearly">Yearly Member ($150/yr)</option>
+                </select>
+                <p class="text-muted fs-xs mt-1">Paid members get full access to all secret recipes!</p>
+            </div>
+
+            <div id="payment-section" style="display: none; background: #fdfdfd; border: 2px solid var(--secondary-cream); padding: 20px; border-radius: 15px; margin-bottom: 20px;">
+                <h6 class="fw-bold mb-3"><i class="fa-solid fa-credit-card me-2 text-primary"></i> Payment Details</h6>
+                
+                <div class="d-flex gap-3 mb-3">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="PaymentMethod" id="regCC" value="Credit Card" checked>
+                        <label class="form-check-label small fw-bold" for="regCC">Credit Card</label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="PaymentMethod" id="regDC" value="Debit Card">
+                        <label class="form-check-label small fw-bold" for="regDC">Debit Card</label>
+                    </div>
+                </div>
+
+                <div class="mb-3">
+                    <label class="small fw-bold">Card Number</label>
+                    <input type="text" name="CardNumber" class="form-control" placeholder="XXXX XXXX XXXX XXXX" />
+                </div>
+                <div class="row">
+                    <div class="col-6 mb-3">
+                        <label class="small fw-bold">Expiry Date</label>
+                        <input type="text" name="CardExpiry" class="form-control" placeholder="MM/YY" />
+                    </div>
+                    <div class="col-6 mb-3">
+                        <label class="small fw-bold">CVV</label>
+                        <input type="password" name="CardCvv" class="form-control" placeholder="123" />
+                    </div>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-primary">Scoop Some Fun!</button>
+
+            <div class="auth-footer">
+                Already have an account? <a asp-action="Login">Login here</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&family=Fredoka:wght@400;600&display=swap');
+
+    :root {
+        --primary-blue: #1a1a1a;
+        --mehran-gold: #d4af37;
+        --secondary-cream: #fbf7ef;
+        --text-dark: #1a1a1a;
+    }
+
+    body {
+        margin: 0;
+        background: linear-gradient(135deg, #1a1a1a 0%, #3e2723 100%);
+        min-height: 100vh;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    .auth-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 40px 20px;
+    }
+
+    .auth-card {
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        padding: 40px;
+        border-radius: 24px;
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+        max-width: 600px;
+        width: 100%;
+        border: 4px solid var(--mehran-gold);
+    }
+
+    .animate-pop-in {
+        animation: popIn 0.6s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+    }
+
+    @@keyframes popIn {
+        from { opacity: 0; transform: scale(0.9); }
+        to { opacity: 1; transform: scale(1); }
+    }
+
+    .auth-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .ice-cream-icon {
+        font-size: 50px;
+        margin-bottom: 10px;
+    }
+
+    .auth-header h1 {
+        font-family: 'Fredoka', sans-serif;
+        color: var(--primary-blue);
+        font-size: 32px;
+        margin: 0;
+    }
+
+    .auth-header p {
+        color: #888;
+        font-size: 14px;
+    }
+
+    .input-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .input-group {
+        margin-bottom: 20px;
+    }
+
+    .input-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: var(--text-dark);
+        font-size: 14px;
+    }
+
+    .input-group input {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid #eee;
+        border-radius: 12px;
+        font-size: 15px;
+        transition: all 0.3s;
+        box-sizing: border-box;
+    }
+
+    .input-group input:focus {
+        border-color: var(--primary-blue);
+        outline: none;
+        box-shadow: 0 0 0 4px rgba(0, 74, 153, 0.1);
+    }
+
+    .file-upload {
+        position: relative;
+    }
+
+    .file-upload input {
+        display: none;
+    }
+
+    .file-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 15px;
+        border: 2px dashed #ddd;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: 0.3s;
+        color: #777;
+    }
+
+    .file-label:hover {
+        border-color: var(--primary-blue);
+        background: #f0f7ff;
+    }
+
+    .btn-primary {
+        width: 100%;
+        background: var(--primary-blue);
+        color: var(--mehran-gold);
+        border: 2px solid var(--mehran-gold);
+        padding: 14px;
+        border-radius: 12px;
+        font-size: 16px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: 0.3s;
+        margin-top: 10px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+
+    .btn-primary:hover {
+        background: var(--mehran-gold);
+        color: var(--primary-blue);
+        transform: translateY(-2px);
+    }
+
+    .btn-primary:active {
+        transform: translateY(0);
+    }
+
+    .auth-footer {
+        text-align: center;
+        margin-top: 25px;
+        font-size: 14px;
+        color: #777;
+    }
+
+    .auth-footer a {
+        color: var(--primary-blue);
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .error-msg {
+        color: #ff4757;
+        font-size: 12px;
+        margin-top: 4px;
+        display: block;
+    }
+
+    .error-summary {
+        background: #fff5f5;
+        border-left: 4px solid #ff4757;
+        padding: 10px;
+        margin-bottom: 20px;
+        border-radius: 4px;
+        color: #ff4757;
+        font-size: 13px;
+    }
+
+    @@media (max-width: 500px) {
+        .input-row {
+            grid-template-columns: 1fr;
+        }
+        .auth-card {
+            padding: 25px;
+        }
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.getElementById('subscriptionType').addEventListener('change', function() {
+            var paymentSection = document.getElementById('payment-section');
+            if (this.value === 'Monthly' || this.value === 'Yearly') {
+                paymentSection.style.display = 'block';
+            } else {
+                paymentSection.style.display = 'none';
+            }
+        });
+    </script>
+}

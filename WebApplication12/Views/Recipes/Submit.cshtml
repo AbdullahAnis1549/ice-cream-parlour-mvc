@@ -1,0 +1,106 @@
+@model WebApplication12.Models.UserSubmission
+@{
+    ViewData["Title"] = "Share Your Recipe";
+}
+
+<div class="container py-5">
+    <div class="text-center mb-5">
+        <h1 class="parlor-title display-4">The Artisanal Registry</h1>
+        <p class="text-muted text-uppercase small" style="letter-spacing: 2px;">Submit your original creation for the monthly Gold Award</p>
+    </div>
+
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="submission-card p-4 p-lg-5">
+                <form asp-action="Submit" method="post">
+                    <div class="mb-4">
+                        <label asp-for="RecipeName" class="form-label">Recipe Title</label>
+                        <input asp-for="RecipeName" class="form-control" placeholder="e.g. Midnight Mint Dream" required />
+                        <span asp-validation-for="RecipeName" class="text-danger small d-block mt-1"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Ingredients" class="form-label">Artisanal Ingredients</label>
+                        <textarea asp-for="Ingredients" class="form-control" rows="5" placeholder="Specify your elements (one per line)..." required></textarea>
+                        <span asp-validation-for="Ingredients" class="text-danger small d-block mt-1"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Procedure" class="form-label">The Extraction Process</label>
+                        <textarea asp-for="Procedure" class="form-control" rows="8" placeholder="Step-by-step methodology..." required></textarea>
+                        <span asp-validation-for="Procedure" class="text-danger small d-block mt-1"></span>
+                    </div>
+
+                    <div class="alert bg-soft-gold border-0 d-flex align-items-center" style="background: #fdfaf0; border-left: 3px solid var(--luxury-gold) !important;">
+                        <i class="fa-solid fa-circle-info fs-4 me-3" style="color: var(--luxury-gold);"></i>
+                        <span class="small text-muted">Upon submission, your recipe enters the evaluation phase for the Artisanal Gold Collection feature.</span>
+                    </div>
+
+                    <button type="submit" class="btn-submit w-100 mt-4">Send Recipe to Admin 🍦</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    @@import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap');
+
+    .parlor-title {
+        font-family: 'Playfair Display', serif;
+        color: var(--luxury-black);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 3px;
+    }
+
+    .submission-card {
+        background: white;
+        border: 1px solid #eee;
+        border-top: 5px solid var(--luxury-gold);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.05);
+    }
+
+    .form-label {
+        color: var(--luxury-black);
+        font-weight: 700;
+        text-transform: uppercase;
+        font-size: 12px;
+        letter-spacing: 1px;
+    }
+
+    .form-control {
+        border-radius: 0 !important;
+        padding: 12px 15px;
+        border: 1px solid #ddd;
+        transition: 0.3s;
+    }
+
+    .form-control:focus {
+        border-color: var(--luxury-gold);
+        box-shadow: none;
+        outline: none;
+    }
+
+    .btn-submit {
+        background: var(--luxury-black);
+        color: var(--luxury-gold);
+        border: 1px solid var(--luxury-gold);
+        padding: 18px;
+        border-radius: 0;
+        font-weight: 700;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        transition: 0.4s;
+    }
+
+    .btn-submit:hover {
+        background: var(--luxury-gold);
+        color: var(--luxury-black);
+    }
+</style>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
