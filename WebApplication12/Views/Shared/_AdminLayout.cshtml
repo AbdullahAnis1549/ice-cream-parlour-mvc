@@ -380,6 +380,18 @@
         .bg-blue-light { background-color: rgba(52, 152, 219, 0.2); color: #3498db; }
         .bg-caramel-light { background-color: rgba(217, 160, 102, 0.2); color: var(--secondary-caramel); }
         .bg-chocolate-light { background-color: rgba(75, 46, 43, 0.1); color: var(--primary-chocolate); }
+
+        /* Responsive Design */
+        @@media (max-width: 991px) {
+            .admin-sidebar {
+                position: fixed;
+                z-index: 1050;
+            }
+            .admin-main {
+                margin-left: 0;
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>

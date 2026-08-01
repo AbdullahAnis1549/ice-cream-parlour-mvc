@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+This file is used by the publish/package process of your Web project. You can customize the behavior of this process
+by editing this MSBuild file. In order to learn more about this please visit https://go.microsoft.com/fwlink/?LinkID=208121. 
+-->
+<Project>
+  <PropertyGroup>
+    <TimeStampOfAssociatedLegacyPublishXmlFile />
+    <EncryptedPassword>AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAANGmDTSXWvk28C5DCBztCTwAAAAACAAAAAAAQZgAAAAEAACAAAABihPD1qWbaWKhU8yck+OMAt9RTX2ifIVwzPta+9txr8wAAAAAOgAAAAAIAACAAAADo9vZY3w3plmam431mBtF0B8eIxIj7pc9rTzEQrdPABCAAAAAaMPhkjpyRn9M4CO7YWqBFuhucKXJPpbNMQgMJn19C/UAAAADvhvt/tlsDmSjBaCaCjH/sPiGcnArGVUD71ssCPQh3I4urybFG3KXUgUWGT635HeXeSKj7TayZHbz+gZ3uqwc6</EncryptedPassword>
+    <History>False|2026-06-03T09:37:06.1146327Z||;True|2026-06-03T14:36:36.5262249+05:00||;</History>
+    <LastFailureDetails />
+  </PropertyGroup>
+  <ItemGroup>
+    <DestinationConnectionStrings Include="DefaultConnection">
+      <Value>Server=db54617.databaseasp.net%3b Database=db54617%3b User Id=db54617%3b Password=7o_A!Mc6J3%40f%3b Encrypt=False%3b MultipleActiveResultSets=True%3b  </Value>
+    </DestinationConnectionStrings>
+  </ItemGroup>
+  <ItemGroup>
+    <EFMigrations Include="WebApplication12.Data.ApplicationDbContext">
+      <Value>Server=db54617.databaseasp.net%3b Database=db54617%3b User Id=db54617%3b Password=7o_A!Mc6J3%40f%3b Encrypt=False%3b MultipleActiveResultSets=True%3b  </Value>
+    </EFMigrations>
+  </ItemGroup>
+</Project>

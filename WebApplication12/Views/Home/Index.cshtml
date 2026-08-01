@@ -237,4 +237,41 @@
     }
     .promo-banner .section-title { color: var(--luxury-gold); margin-bottom: 25px; }
     .promo-banner .section-title::after { display: none; }
+
+    /* Responsive adjustments */
+    @@media (max-width: 768px) {
+        .hero-title {
+            font-size: 3.5rem;
+            letter-spacing: 2px !important;
+        }
+        .hero-subtitle {
+            font-size: 1rem;
+            letter-spacing: 1px !important;
+            margin-bottom: 2rem !important;
+        }
+        .btn-hero-primary, .btn-hero-outline {
+            padding: 12px 25px;
+            font-size: 10px;
+            width: 100%;
+        }
+        .d-flex.justify-content-center.gap-4 {
+            flex-direction: column;
+            gap: 1rem !important;
+            padding: 0 20px;
+        }
+        .carousel-item {
+            min-height: 80vh;
+            height: 80vh;
+        }
+        .section-title {
+            font-size: 28px;
+            letter-spacing: 3px;
+        }
+        .deal-card {
+            padding: 2rem !important;
+        }
+        .promo-banner {
+            padding: 60px 20px;
+        }
+    }
 </style>
