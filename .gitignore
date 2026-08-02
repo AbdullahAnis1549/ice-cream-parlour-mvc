@@ -2,3 +2,18 @@ bin/
 obj/
 .vs/
 appsettings.Development.json
+
+## Publish output (contains secrets & build artifacts - DO NOT COMMIT)
+**/publish/
+
+## Secrets
+secrets.json
+appsettings.json
+
+## OS files
+.DS_Store
+Thumbs.db
+
+## Logs
+*.log
+logs/

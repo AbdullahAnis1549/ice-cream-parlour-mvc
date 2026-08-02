@@ -89,12 +89,12 @@
 
     .book-card {
         background: white;
-        border-radius: 0;
-        overflow: hidden;
-        transition: 0.4s;
         border: 1px solid #eee;
-        height: 320px;
+        overflow: hidden;
+        transition: .4s;
+        height: auto;
     }
+
 
     .book-card .row {
         height: 100%;
@@ -108,14 +108,14 @@
 
     .book-cover-wrapper {
         position: relative;
-        height: 100%;
-        min-height: 100%;
+        height: 320px;
     }
 
     .book-cover {
         width: 100%;
         height: 100%;
         object-fit: cover;
+        display: block;
     }
 
     .book-placeholder {
@@ -186,4 +186,20 @@
     }
 
     .animate-pop-in { animation: popIn 0.6s ease-out; }
+
+    @@media (min-width:768px){
+
+    .book-card{
+        height:320px;
+    }
+
+    .book-card .row{
+        height:100%;
+    }
+
+    .book-cover-wrapper{
+        height:100%;
+    }
+}
+    
 </style>
