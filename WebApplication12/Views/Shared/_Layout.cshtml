@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Sweet Scoops Parlor</title>
+    <title>@ViewData["Title"] - Creamy Delight</title>
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
@@ -32,7 +32,6 @@
             background-color: var(--pure-white);
             color: var(--primary-chocolate);
             margin: 0;
-            overflow-x: hidden;
         }
 
         /* Luxury Navigation */
@@ -105,7 +104,7 @@
         }
 
         .btn-register:hover {
-            background: var(--vanilla-cream);
+            background: var(--accent-vanilla);
             color: var(--primary-chocolate);
         }
 
@@ -204,57 +203,17 @@
             min-height: 70vh;
         }
 
-        /* Responsive Design */
-        @@media (max-width: 991px) {
-            .navbar-collapse {
-                background-color: var(--primary-chocolate);
-                padding: 1rem;
-                border-radius: 8px;
-                margin-top: 10px;
-                text-align: center;
-            }
-            .nav-link {
-                margin: 10px 0;
-            }
-            .navbar-nav {
-                margin-bottom: 15px;
-            }
-            .d-flex.align-items-center {
-                flex-direction: column;
-                width: 100%;
-            }
-            .btn-auth {
-                width: 100%;
-                margin: 5px 0 !important;
-            }
-            .user-profile-nav {
-                width: 100%;
-                justify-content: center;
-                margin-bottom: 10px;
-            }
-            .dropdown-menu {
-                text-align: center;
-            }
-            .footer-links, .footer .col-lg-4 {
-                text-align: center !important;
-            }
-            .footer-links h5 {
-                margin-top: 20px;
-            }
-            .footer-logo {
-                text-align: center;
-            }
-        }
     </style>
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-lg sticky-top">
+<body class="storefront">
+    <a class="visually-hidden-focusable skip-link" href="#main-content">Skip to content</a>
+    <header class="storefront-header">
+        <nav class="navbar navbar-expand-xl navbar-dark">
             <div class="container">
                 <a class="navbar-brand" asp-controller="Home" asp-action="Index">
                     <span style="font-size: 24px; color: var(--luxury-gold);">✧</span> CREAMY DELIGHT
                 </a>
-                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarNav">
@@ -283,7 +242,7 @@
                             <a class="nav-link" asp-controller="Home" asp-action="FAQ">FAQ</a>
                         </li>
                     </ul>
-                    <div class="d-flex align-items-center flex-column flex-lg-row">
+                    <div class="nav-account d-flex align-items-center flex-column flex-xl-row">
                         @if (Context.Session.GetString("UserRole") == "admin")
                         {
                             <a asp-controller="Admin" asp-action="Dashboard" class="btn btn-dark rounded-pill px-3 me-3 small"><i class="fa-solid fa-screwdriver-wrench me-1"></i> Admin</a>
@@ -296,7 +255,7 @@
                         else
                         {
                             <div class="dropdown">
-                                <div class="user-profile-nav" id="userMenu" data-bs-toggle="dropdown">
+                                <button type="button" class="user-profile-nav" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
                                     @{
                                         var imageUrl = Context.Session.GetString("UserImageUrl");
                                         var userName = Context.Session.GetString("UserName");
@@ -309,9 +268,9 @@
                                     {
                                         <i class="fa-solid fa-circle-user text-white fs-4"></i>
                                     }
-                                    <span class="fw-bold text-white">@userName</span>
-                                    <i class="fa-solid fa-chevron-down fs-xs text-muted"></i>
-                                </div>
+                                    <span class="fw-bold text-white text-truncate">@userName</span>
+                                    <i class="fa-solid fa-chevron-down text-white" aria-hidden="true"></i>
+                                </button>
                                 <ul class="dropdown-menu dropdown-menu-end border-0 shadow-lg p-2" style="border-radius: 15px;">
                                     <li><a class="dropdown-item p-2 rounded" asp-controller="Account" asp-action="Profile"><i class="fa-solid fa-user-gear me-2 text-primary"></i> My Profile</a></li>
                                     <li><hr class="dropdown-divider"></li>
@@ -330,7 +289,7 @@
         </nav>
     </header>
 
-    <main role="main">
+    <main id="main-content" tabindex="-1">
         @RenderBody()
     </main>
 
@@ -338,44 +297,34 @@
         <div class="container">
             <div class="row">
                 <div class="col-lg-4 mb-4">
-                    <a class="footer-logo" href="#">✧ CREAMY DELIGHT</a>
-                    <p class="text-muted">Defining the art of cold indulgence since 2026. Join the elite collection of artisanal flavors.</p>
-                    <div class="social-icons">
-                        <a href="#"><i class="fa-brands fa-facebook"></i></a>
-                        <a href="#"><i class="fa-brands fa-instagram"></i></a>
-                        <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                        <a href="#"><i class="fa-brands fa-tiktok"></i></a>
-                    </div>
+                    <a class="footer-logo" asp-controller="Home" asp-action="Index">✧ CREAMY DELIGHT</a>
+                    <p>Explore ice cream recipes, seasonal offers, and the recipe book shop.</p>
                 </div>
-                <div class="col-lg-2 col-md-4 mb-4 footer-links">
+                <div class="col-6 col-lg-2 mb-4 footer-links">
                     <h5>Quick Links</h5>
                     <ul>
-                        <li><a href="#">About Us</a></li>
-                        <li><a href="#">Our Menu</a></li>
-                        <li><a href="#">Specialities</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a asp-controller="Home" asp-action="About">About Us</a></li>
+                        <li><a asp-controller="Recipes" asp-action="Index">Explore Recipes</a></li>
+                        <li><a asp-controller="Books" asp-action="Index">Recipe Books</a></li>
+                        <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-2 col-md-4 mb-4 footer-links">
+                <div class="col-6 col-lg-2 mb-4 footer-links">
                     <h5>Account</h5>
                     <ul>
                         <li><a asp-controller="Account" asp-action="Login">Login</a></li>
                         <li><a asp-controller="Account" asp-action="Register">Register</a></li>
-                        <li><a href="#">Gift Cards</a></li>
-                        <li><a href="#">Help Center</a></li>
+                        <li><a asp-controller="Home" asp-action="FAQ">FAQ</a></li>
                     </ul>
                 </div>
-                <div class="col-lg-4 col-md-4 mb-4 footer-links text-lg-end">
-                    <h5>Newsletter</h5>
-                    <p class="text-muted">Get a free scoop on your birthday!</p>
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control rounded-pill-start border-0 bg-light" placeholder="Email Address">
-                        <button class="btn btn-primary rounded-pill-end px-4" type="button">Go!</button>
-                    </div>
+                <div class="col-lg-4 mb-4 footer-links text-lg-end">
+                    <h5>Need help?</h5>
+                    <p><a asp-controller="Home" asp-action="Contact">Contact Creamy Delight</a></p>
+                    <p><a asp-controller="Home" asp-action="Privacy">Privacy policy</a></p>
                 </div>
             </div>
             <div class="copyright">
-                <p>&copy; 2026 Sweet Scoops Ice Cream Parlor - All Rights Reserved.</p>
+                <p>&copy; @DateTime.Now.Year Creamy Delight</p>
             </div>
         </div>
     </footer>

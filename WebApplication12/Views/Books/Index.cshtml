@@ -28,17 +28,17 @@
         </div>
     }
 
-    <div class="row g-5">
+    <div class="row g-3 g-md-4">
         @foreach (var book in Model)
         {
-            <div class="col-lg-6">
+            <div class="col-xl-6">
                 <div class="book-card animate-pop-in">
                     <div class="row g-0">
                         <div class="col-md-5">
                             <div class="book-cover-wrapper">
                                 @if (!string.IsNullOrEmpty(book.ImageUrl))
                                 {
-                                    <img src="@book.ImageUrl" alt="@book.Title" class="book-cover">
+                                    <img src="@book.ImageUrl" alt="@book.Title" class="book-cover" loading="lazy" decoding="async">
                                 }
                                 else
                                 {
@@ -48,12 +48,12 @@
                             </div>
                         </div>
                         <div class="col-md-7">
-                            <div class="card-body p-5 d-flex flex-column h-100">
+                            <div class="card-body p-3 p-sm-4 d-flex flex-column h-100">
                                 <h3 class="book-title fw-bold text-uppercase" style="font-family: 'Playfair Display', serif; letter-spacing: 1px;">@book.Title</h3>
                                 <p class="book-desc flex-grow-1 mb-4" style="line-height: 1.8;">@book.Description</p>
                                 <div class="mt-auto">
                                     <a asp-action="Order" asp-route-bookId="@book.Id" class="btn-luxury-buy">
-                                        Acquire Copy
+                                        Order Book
                                     </a>
                                 </div>
                             </div>

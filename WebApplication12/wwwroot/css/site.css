@@ -29,3 +29,138 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
   text-align: start;
 }
+
+/* Shared storefront controls and responsive page spacing */
+.storefront {
+  --vanilla-cream: var(--accent-vanilla);
+}
+
+.storefront main,
+.admin-content {
+  overflow-wrap: anywhere;
+}
+
+.skip-link {
+  position: fixed;
+  z-index: 1100;
+  top: .5rem;
+  left: .5rem;
+  padding: .75rem 1rem;
+  background: white;
+  color: #2d1a18;
+}
+
+.storefront :focus-visible,
+.admin-main :focus-visible,
+.admin-sidebar :focus-visible {
+  outline: 2px solid #a75226;
+  outline-offset: 3px;
+}
+
+.storefront .navbar-brand {
+  font-size: clamp(1.125rem, 3vw, 1.625rem);
+  gap: .5rem;
+  margin-right: .5rem;
+}
+
+.storefront .navbar .nav-link,
+.storefront .navbar .btn-auth,
+.storefront .navbar .dropdown-item {
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+.storefront .navbar .nav-link {
+  margin: 0 .25rem;
+}
+
+.storefront .nav-account {
+  gap: .5rem;
+}
+
+.storefront .navbar .btn-login {
+  margin: 0;
+}
+
+.storefront .user-profile-nav {
+  width: 100%;
+  max-width: 12rem;
+  min-height: 44px;
+}
+
+.storefront .footer {
+  padding: clamp(2rem, 5vw, 4.5rem) 0 1.25rem;
+  margin-top: 0;
+}
+
+.storefront .footer-logo {
+  font-size: clamp(1.25rem, 3vw, 1.75rem);
+  text-decoration: none;
+  letter-spacing: .08em;
+  margin-bottom: .75rem;
+}
+
+.storefront .footer .footer-links a,
+.storefront .footer .copyright {
+  color: #fff3e0;
+}
+
+.storefront .footer .footer-links a:hover {
+  color: #f9cb9b;
+  transform: none;
+}
+
+.storefront .footer .footer-links h5 {
+  margin-bottom: 1rem;
+}
+
+.storefront .footer .copyright {
+  margin-top: .75rem;
+  border-color: #87625a;
+}
+
+@media (max-width: 1199.98px) {
+  .storefront .navbar-collapse {
+    padding-block: .5rem;
+    max-height: 70vh;
+    max-height: 70dvh;
+    overflow-y: auto;
+  }
+
+  .storefront .nav-account {
+    align-items: stretch !important;
+    margin-top: .75rem;
+  }
+
+  .storefront .navbar .btn-auth {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .storefront.storefront .auth-container {
+    padding-inline: 1rem;
+  }
+
+  .storefront.storefront .auth-card {
+    padding-inline: 1.25rem;
+    min-width: 0;
+  }
+
+  .storefront :is(input, textarea, select):not([type="checkbox"], [type="radio"]) {
+    font-size: 16px;
+  }
+
+  .storefront .profile-card :is(.profile-body, .profile-footer) {
+    padding-inline: 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .storefront *, .storefront *::before, .storefront *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

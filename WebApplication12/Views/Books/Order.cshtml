@@ -14,7 +14,7 @@
                             <div class="text-center mb-4">
                                 @if (Model.Book != null && !string.IsNullOrEmpty(Model.Book.ImageUrl))
                                 {
-                                    <img src="@Model.Book.ImageUrl" class="img-fluid rounded-3 shadow" style="max-height: 200px;">
+                                    <img src="@Model.Book.ImageUrl" alt="@Model.Book.Title" class="img-fluid rounded-3 shadow" style="max-height: 200px;">
                                 }
                                 else
                                 {
