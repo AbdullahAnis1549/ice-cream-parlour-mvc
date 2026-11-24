@@ -45,12 +45,12 @@
                                 <i class="fa-solid fa-wand-magic-sparkles me-2" style="color: var(--luxury-gold);"></i> The Craft
                             </div>
                             <div class="procedure-box p-4">
-                                @Html.Raw(Model.Procedure.Replace("\n", "<br/>"))
+                                @Model.Procedure
                             </div>
 
                             <div class="mt-5 d-flex flex-wrap gap-3">
                                 <a asp-action="Index" class="btn-luxury-back">Back To Collection</a>
-                                <button class="btn-luxury-print" onclick="downloadPdf()">Download Recipe PDF</button>
+                                <button class="btn-luxury-print" data-recipe-name="@Model.Name" onclick="downloadPdf(this)">Download Recipe PDF</button>
                             </div>
                         </div>
                     </div>
@@ -63,7 +63,7 @@
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <script>
-        function downloadPdf() {
+        function downloadPdf(button) {
             var element = document.querySelector('.recipe-detail-card').cloneNode(true);
             
             // Remove the buttons container from the clone
@@ -72,7 +72,7 @@
             
             var opt = {
               margin:       10,
-              filename:     '@Html.Raw(Model.Name.Replace("'", ""))_Manuscript.pdf',
+              filename:     button.dataset.recipeName + '_Recipe.pdf',
               image:        { type: 'jpeg', quality: 0.98 },
               html2canvas:  { scale: 2, useCORS: true },
               jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
@@ -164,6 +164,7 @@
     }
 
     .procedure-box {
+        white-space: pre-line;
         background: #fafafa;
         color: #444;
         line-height: 2;

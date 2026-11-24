@@ -135,6 +135,12 @@ namespace WebApplication12.Models
         public int DisplayOrder { get; set; } = 0;
 
         [NotMapped]
+        public string? DisplayTitle => Title is null ? null : System.Net.WebUtility.HtmlDecode(
+            System.Text.RegularExpressions.Regex.Replace(Title, @"</?span\b[^>]*>|<br\s*/?>",
+                match => match.Value.StartsWith("<br", StringComparison.OrdinalIgnoreCase) ? " " : "",
+                System.Text.RegularExpressions.RegexOptions.IgnoreCase));
+
+        [NotMapped]
         public IFormFile? ImageFile { get; set; }
     }
 }

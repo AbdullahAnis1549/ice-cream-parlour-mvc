@@ -1,3 +1,5 @@
+using System.Security.Cryptography;
+using Microsoft.AspNetCore.RateLimiting;
 using BCrypt.Net;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -35,7 +37,8 @@ namespace WebApplication12.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Register(ApplicationUser model, IFormFile? imageFile, string? CardNumber, string? CardExpiry, string? CardCvv)
+        [EnableRateLimiting("account-attempts")]
+        public async Task<IActionResult> Register([Bind("Name,Email,Phone,Password,ConfirmedPassword,SubscriptionType")] ApplicationUser model, IFormFile? imageFile, string? CardNumber, string? CardExpiry, string? CardCvv)
         {
             if (model.SubscriptionType == "Monthly" || model.SubscriptionType == "Yearly")
             {
@@ -105,7 +108,7 @@ namespace WebApplication12.Controllers
 
             model.Password = BCrypt.Net.BCrypt.HashPassword(model.Password);
             model.VerifyStatus = false;
-            model.VerifyCode = new Random().Next(100000, 999999);
+            model.VerifyCode = RandomNumberGenerator.GetInt32(100000, 1000000);
             model.VerifyCodeExpDate = DateTime.UtcNow.AddMinutes(15);
             model.UserRole = "user"; 
 
@@ -137,6 +140,7 @@ namespace WebApplication12.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("account-attempts")]
         public async Task<IActionResult> Login(string email, string password)
         {
             if (string.IsNullOrEmpty(email) || string.IsNullOrEmpty(password))
@@ -191,12 +195,13 @@ namespace WebApplication12.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("account-attempts")]
         public async Task<IActionResult> VerifyUser(string email, int verificationCode)
         {
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
             if (user == null) return RedirectToAction("Register");
 
-            if (user.VerifyCode != verificationCode || user.VerifyCodeExpDate < DateTime.UtcNow)
+            if (user.VerifyCode != verificationCode || user.VerifyCodeExpDate is null || user.VerifyCodeExpDate <= DateTime.UtcNow)
             {
                 ModelState.AddModelError("", "Invalid or expired verification code");
                 ViewBag.Email = email;
@@ -351,6 +356,7 @@ namespace WebApplication12.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("account-attempts")]
         public async Task<IActionResult> ForgotPassword(string email)
         {
             if (string.IsNullOrEmpty(email))
@@ -360,26 +366,22 @@ namespace WebApplication12.Controllers
             }
 
             var user = await _context.Users.FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
-            if (user == null)
+            if (user != null)
             {
-                ModelState.AddModelError("", "No account found with this email.");
-                return View();
-            }
+                var resetCode = RandomNumberGenerator.GetInt32(100000, 1000000);
+                user.ForgotCode = resetCode.ToString();
+                user.ForgotCodeExp = DateTime.UtcNow.AddMinutes(15);
+                await _context.SaveChangesAsync();
 
-            // Generate a 6-digit reset code
-            var resetCode = new Random().Next(100000, 999999).ToString();
-            user.ForgotCode = resetCode;
-            user.ForgotCodeExp = DateTime.UtcNow.AddMinutes(15);
-            await _context.SaveChangesAsync();
-
-            try
-            {
-                _emailService.SendVerificationEmail(user.Email, int.Parse(resetCode));
+                try
+                {
+                    _emailService.SendVerificationEmail(user.Email, resetCode);
+                }
+                catch (Exception ex) { _logger.LogError(ex, "Reset code email failed"); }
             }
-            catch (Exception ex) { _logger.LogError(ex, "Reset code email failed"); }
 
             TempData["ResetEmail"] = email;
-            TempData["SuccessMessage"] = "A reset code has been sent to your email.";
+            TempData["SuccessMessage"] = "If an account exists, a reset code has been sent to your email.";
             return RedirectToAction("ResetPassword");
         }
 
@@ -394,8 +396,16 @@ namespace WebApplication12.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [EnableRateLimiting("account-attempts")]
         public async Task<IActionResult> ResetPassword(string email, string resetCode, string newPassword, string confirmPassword)
         {
+            if (string.IsNullOrWhiteSpace(newPassword) || newPassword.Length < 6 || System.Text.Encoding.UTF8.GetByteCount(newPassword) > 72)
+            {
+                ModelState.AddModelError("", "Use at least 6 characters and no more than 72 UTF-8 bytes.");
+                ViewBag.Email = email;
+                return View();
+            }
+
             if (newPassword != confirmPassword)
             {
                 ModelState.AddModelError("", "Passwords do not match.");
@@ -410,17 +420,28 @@ namespace WebApplication12.Controllers
                 return View();
             }
 
-            if (user.ForgotCode != resetCode || user.ForgotCodeExp < DateTime.UtcNow)
+            if (string.IsNullOrEmpty(resetCode) || user.ForgotCode != resetCode || user.ForgotCodeExp is null || user.ForgotCodeExp <= DateTime.UtcNow)
             {
                 ModelState.AddModelError("", "Invalid or expired reset code.");
                 ViewBag.Email = email;
                 return View();
             }
 
-            user.Password = BCrypt.Net.BCrypt.HashPassword(newPassword);
-            user.ForgotCode = null;
-            user.ForgotCodeExp = null;
-            await _context.SaveChangesAsync();
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            var now = DateTime.UtcNow;
+            var updated = await _context.Users
+                .Where(u => u.Id == user.Id && u.ForgotCode == resetCode && u.ForgotCodeExp > now)
+                .ExecuteUpdateAsync(update => update
+                    .SetProperty(u => u.Password, passwordHash)
+                    .SetProperty(u => u.ForgotCode, (string?)null)
+                    .SetProperty(u => u.ForgotCodeExp, (DateTime?)null));
+
+            if (updated == 0)
+            {
+                ModelState.AddModelError("", "Invalid or expired reset code.");
+                ViewBag.Email = email;
+                return View();
+            }
 
             TempData["SuccessMessage"] = "Password reset successfully. Please login with your new password.";
             return RedirectToAction("Login");

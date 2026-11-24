@@ -17,9 +17,8 @@
                 <div class="card-body p-5">
                     <form asp-action="CreateHeroSlider" method="post" enctype="multipart/form-data">
                         <div class="mb-4">
-                            <label asp-for="Title" class="form-label text-uppercase small fw-bold" style="color: var(--luxury-gold)">Slide Title (HTML allowed)</label>
-                            <input asp-for="Title" class="form-control admin-input" placeholder="e.g. CREAMY &lt;br/&gt; &lt;span style='color: var(--secondary-caramel);'&gt;DELIGHT&lt;/span&gt;" />
-                            <small class="text-muted">You can use HTML tags to style specific parts of the title.</small>
+                            <label asp-for="Title" class="form-label text-uppercase small fw-bold" style="color: var(--luxury-gold)">Slide Title</label>
+                            <input asp-for="Title" class="form-control admin-input" placeholder="e.g. Creamy Delight" />
                             <span asp-validation-for="Title" class="text-danger"></span>
                         </div>
 

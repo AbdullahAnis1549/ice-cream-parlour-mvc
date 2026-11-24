@@ -15,7 +15,7 @@
                     <div class="container hero-content text-center">
                         <div>
                             <h1 class="hero-title display-2 fw-bold text-white mb-4" style="font-family: 'Playfair Display', serif; letter-spacing: 5px;">
-                                @Html.Raw(slide.Title ?? "CREAMY <br /> <span style='color: var(--secondary-caramel);'>DELIGHT</span>")
+                                @(slide.DisplayTitle ?? "Creamy Delight")
                             </h1>
                             <p class="hero-subtitle lead text-white-50 mb-5 text-uppercase" style="letter-spacing: 3px; font-weight: 300;">@slide.Subtitle</p>
                             <div class="hero-actions">

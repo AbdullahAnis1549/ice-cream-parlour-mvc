@@ -77,10 +77,23 @@ dotnet restore
 ```
 
 ### Step 2: Database Setup
-Update the connection string in `appsettings.json` if necessary, then run the database migrations to generate database tables:
+Configure SQL Server from the project directory, then apply migrations.
 ```bash
+dotnet user-secrets set "ConnectionStrings:DefaultConnection" "<your SQL Server connection string>"
 dotnet ef database update
 ```
+
+### Integration settings
+
+Use .NET User Secrets for local development. Set each integration key with the same command format as the connection string above.
+
+- Email delivery uses the FromEmail, SmtpServer, Port, Username, and Password keys under EmailSettings.
+- Image uploads use the CloudName, ApiKey, and ApiSecret keys under CloudinarySettings.
+- The checkout and paid membership flows use Stripe:SecretKey. They currently use Stripe test tokens and are for demos.
+
+For deployment, set the same keys as environment variables using double underscores for section separators. For example, use ConnectionStrings__DefaultConnection and EmailSettings__Password. Enter credentials directly in your host's configuration.
+
+If credentials from earlier commits are active, revoke or rotate them with the provider and update the deployment configuration. Cleaning the current source tree leaves earlier Git revisions intact.
 
 ### Step 3: Run the Application
 Start the development server:
